@@ -1,5 +1,8 @@
 const { processPose } = require("../modules/poseProcessor");
-const { saveSession, MAX_SESSION_FRAMES } = require("../modules/sessionStorage");
+const {
+  saveSession,
+  MAX_SESSION_FRAMES,
+} = require("../modules/sessionStorage");
 
 function setupSocketHandlers(io, sessions) {
   io.on("connection", (socket) => {
@@ -12,7 +15,8 @@ function setupSocketHandlers(io, sessions) {
 
     // ── Real-time frame processing ──
     socket.on("frame", (data) => {
-      if (!data || !Array.isArray(data.landmarks) || data.landmarks.length < 29) return;
+      if (!data || !Array.isArray(data.landmarks) || data.landmarks.length < 29)
+        return;
 
       const now = Date.now();
       if (now - frameWindowStart >= 1000) {
@@ -23,20 +27,20 @@ function setupSocketHandlers(io, sessions) {
       if (frameCountInWindow > MAX_FRAMES_PER_SEC) return;
 
       let result;
-try {
-  // Non-blocking inline — no setTimeout/setImmediate overhead for hot path
-  result = processPose(data);
-} catch (err) {
-  console.error("[SpectraX] Error processing frame:", err.message);
-  socket.emit("feedback", {
-    angles: {},
-    corrections: [],
-    status: "red",
-    feedback: "Error processing pose",
-    timestamp: data.timestamp ?? null,
-  });
-  return;
-}
+      try {
+        // Non-blocking inline — no setTimeout/setImmediate overhead for hot path
+        result = processPose(data);
+      } catch (err) {
+        console.error("[SpectraX] Error processing frame:", err.message);
+        socket.emit("feedback", {
+          angles: {},
+          corrections: [],
+          status: "red",
+          feedback: "Error processing pose",
+          timestamp: data.timestamp ?? null,
+        });
+        return;
+      }
 
       // Store frame in rolling buffer
       const sessionFrames = sessions.get(socket.id) || [];

@@ -4,7 +4,6 @@ title: "[FEATURE]: "
 labels: ["enhancement", "gssoc-26"]
 
 body:
-
   - type: markdown
     attributes:
       value: |

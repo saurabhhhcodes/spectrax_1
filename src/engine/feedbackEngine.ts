@@ -1,14 +1,20 @@
 // --- Types & Interfaces ---
 class JointDeviationProfiler {
   private values: number[] = [];
-  update(value: number) { this.values.push(value); if (this.values.length > 30) this.values.shift(); }
+  update(value: number) {
+    this.values.push(value);
+    if (this.values.length > 30) this.values.shift();
+  }
   getStandardDeviation(): number {
     if (this.values.length < 2) return 0;
     const mean = this.values.reduce((a, b) => a + b, 0) / this.values.length;
-    const variance = this.values.reduce((s, v) => s + (v - mean) ** 2, 0) / this.values.length;
+    const variance =
+      this.values.reduce((s, v) => s + (v - mean) ** 2, 0) / this.values.length;
     return Math.sqrt(variance);
   }
-  reset() { this.values = []; }
+  reset() {
+    this.values = [];
+  }
 }
 
 export interface DetectionIssue {
@@ -234,15 +240,19 @@ export function getFeedback(ctx: any, exerciseKey: string): FeedbackResult {
 
   // Update the deviation profiler with a posture metric specific to the exercise
   let postureMetric = 0;
-  if (exerciseKey === 'pushup' || exerciseKey === 'plank') {
+  if (exerciseKey === "pushup" || exerciseKey === "plank") {
     postureMetric = ctx.bodyLine;
-  } else if (exerciseKey === 'squat' || exerciseKey === 'lunge') {
+  } else if (exerciseKey === "squat" || exerciseKey === "lunge") {
     postureMetric = ctx.lateralScore;
-  } else if (exerciseKey === 'bicepCurl') {
+  } else if (exerciseKey === "bicepCurl") {
     postureMetric = ctx.shoulder;
   }
-  
-  if (postureMetric !== undefined && postureMetric !== null && !isNaN(postureMetric)) {
+
+  if (
+    postureMetric !== undefined &&
+    postureMetric !== null &&
+    !isNaN(postureMetric)
+  ) {
     jointDeviationProfiler.update(postureMetric);
   }
 

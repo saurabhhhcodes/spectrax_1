@@ -40,16 +40,30 @@ const MAX_TEMPORAL_CONFIDENCE = 0.65;
 const BONE_LENGTH_TOLERANCE = 0.15;
 
 const PAIRS: [number, number][] = [
-  [11, 12], [13, 14], [15, 16], [17, 18], [19, 20], [21, 22],
-  [23, 24], [25, 26], [27, 28], [29, 30], [31, 32],
+  [11, 12],
+  [13, 14],
+  [15, 16],
+  [17, 18],
+  [19, 20],
+  [21, 22],
+  [23, 24],
+  [25, 26],
+  [27, 28],
+  [29, 30],
+  [31, 32],
 ];
 
 const BONE_CONNECTIONS: [number, number][] = [
-  [11, 13], [13, 15],
-  [12, 14], [14, 16],
-  [23, 25], [25, 27],
-  [24, 26], [26, 28],
-  [11, 23], [12, 24],
+  [11, 13],
+  [13, 15],
+  [12, 14],
+  [14, 16],
+  [23, 25],
+  [25, 27],
+  [24, 26],
+  [26, 28],
+  [11, 23],
+  [12, 24],
 ];
 
 const MIDLINE_JOINTS = [11, 12, 23, 24];
@@ -126,7 +140,9 @@ export class OcclusionPredictor {
   }
 
   private computeMidlineX(landmarks: Landmark[]): number {
-    const valid = MIDLINE_JOINTS.filter((i) => landmarks[i]?.visibility > OCCLUSION_THRESHOLD);
+    const valid = MIDLINE_JOINTS.filter(
+      (i) => landmarks[i]?.visibility > OCCLUSION_THRESHOLD,
+    );
     if (valid.length === 0) return 0.5;
     return valid.reduce((s, i) => s + landmarks[i].x, 0) / valid.length;
   }
@@ -152,16 +168,25 @@ export class OcclusionPredictor {
 
   private temporalPredict(
     idx: number,
-  ): { position: { x: number; y: number; z: number }; confidence: number } | null {
+  ): {
+    position: { x: number; y: number; z: number };
+    confidence: number;
+  } | null {
     if (this.history.length < 3) return null;
 
     const prev = this.history[this.history.length - 2]?.landmarks[idx];
     const prevPrev = this.history[this.history.length - 3]?.landmarks[idx];
 
     if (!prev || !prevPrev) return null;
-    if (prev.visibility < OCCLUSION_THRESHOLD && prevPrev.visibility < OCCLUSION_THRESHOLD) return null;
+    if (
+      prev.visibility < OCCLUSION_THRESHOLD &&
+      prevPrev.visibility < OCCLUSION_THRESHOLD
+    )
+      return null;
 
-    const loss = this.history.slice(-3).filter((f) => f.landmarks[idx].visibility < OCCLUSION_THRESHOLD).length;
+    const loss = this.history
+      .slice(-3)
+      .filter((f) => f.landmarks[idx].visibility < OCCLUSION_THRESHOLD).length;
 
     const velocity = {
       x: prev.x - prevPrev.x,
@@ -211,18 +236,24 @@ export class OcclusionPredictor {
 
     if (allAboveThreshold([11, 12])) {
       this.boneLengths.shoulderWidth =
-        this.boneLengths.shoulderWidth * 0.9 + dist(landmarks[11], landmarks[12]) * 0.1;
+        this.boneLengths.shoulderWidth * 0.9 +
+        dist(landmarks[11], landmarks[12]) * 0.1;
     }
     if (allAboveThreshold([23, 24])) {
       this.boneLengths.hipWidth =
-        this.boneLengths.hipWidth * 0.9 + dist(landmarks[23], landmarks[24]) * 0.1;
+        this.boneLengths.hipWidth * 0.9 +
+        dist(landmarks[23], landmarks[24]) * 0.1;
     }
 
     this.calibFrames++;
 
     if (this.calibFrames >= CALIBRATION_FRAMES) {
       const keys: (keyof BoneLengthMap)[] = [
-        "upperArm", "forearm", "thigh", "shin", "torsoSide",
+        "upperArm",
+        "forearm",
+        "thigh",
+        "shin",
+        "torsoSide",
       ];
       for (const key of keys) {
         const entry = this.boneLengths[key] as BoneLength;
@@ -244,7 +275,12 @@ export class OcclusionPredictor {
       const expectedLength = this.getExpectedLength(a, entry);
       if (expectedLength <= 0) continue;
 
-      const knownIdx = raw[a].visibility >= OCCLUSION_THRESHOLD ? a : raw[b].visibility >= OCCLUSION_THRESHOLD ? b : -1;
+      const knownIdx =
+        raw[a].visibility >= OCCLUSION_THRESHOLD
+          ? a
+          : raw[b].visibility >= OCCLUSION_THRESHOLD
+            ? b
+            : -1;
       const predictedIdx = knownIdx === a ? b : knownIdx === b ? a : -1;
 
       if (knownIdx === -1 || predictedIdx === -1) continue;
@@ -255,11 +291,14 @@ export class OcclusionPredictor {
       const ratio = expectedLength / actualLength;
       if (Math.abs(ratio - 1) > BONE_LENGTH_TOLERANCE) {
         landmarks[predictedIdx].x =
-          landmarks[knownIdx].x + (landmarks[predictedIdx].x - landmarks[knownIdx].x) * ratio;
+          landmarks[knownIdx].x +
+          (landmarks[predictedIdx].x - landmarks[knownIdx].x) * ratio;
         landmarks[predictedIdx].y =
-          landmarks[knownIdx].y + (landmarks[predictedIdx].y - landmarks[knownIdx].y) * ratio;
+          landmarks[knownIdx].y +
+          (landmarks[predictedIdx].y - landmarks[knownIdx].y) * ratio;
         landmarks[predictedIdx].z =
-          landmarks[knownIdx].z + (landmarks[predictedIdx].z - landmarks[knownIdx].z) * ratio;
+          landmarks[knownIdx].z +
+          (landmarks[predictedIdx].z - landmarks[knownIdx].z) * ratio;
       }
     }
   }
@@ -297,7 +336,10 @@ export class OcclusionPredictor {
   }
 }
 
-function dist(a: { x: number; y: number; z?: number }, b: { x: number; y: number; z?: number }): number {
+function dist(
+  a: { x: number; y: number; z?: number },
+  b: { x: number; y: number; z?: number },
+): number {
   const dx = a.x - b.x;
   const dy = a.y - b.y;
   const dz = (a.z ?? 0) - (b.z ?? 0);

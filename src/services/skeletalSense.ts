@@ -42,7 +42,6 @@ export interface BSIDashboardSeries {
   riskColors: string[];
 }
 
-
 const SPEED_MAX_DEG_S = 500;
 const ROM_MAX_DEG = 180;
 const WEIGHT_SPEED = 0.55;
@@ -58,9 +57,11 @@ const RISK_COLORS: Record<string, string> = {
 
 const RECOMMENDATIONS: Record<string, string> = {
   low: "Joint load is within safe limits. Maintain current form and stay hydrated.",
-  moderate: "Moderate joint stress detected. Consider a brief rest and focus on controlled movements.",
+  moderate:
+    "Moderate joint stress detected. Consider a brief rest and focus on controlled movements.",
   high: "High joint stress detected. Reduce speed or load and prioritise recovery.",
-  critical: "Critical stress level! Stop and rest immediately before continuing.",
+  critical:
+    "Critical stress level! Stop and rest immediately before continuing.",
 };
 
 interface JointDefinition {
@@ -86,7 +87,8 @@ const JOINT_DEFINITIONS: JointDefinition[] = [
 ];
 
 function jointAngleDeg(a: any, b: any, c: any): number {
-  const radians = Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x);
+  const radians =
+    Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x);
   let angle = Math.abs((radians * 180.0) / Math.PI);
   if (angle > 180.0) angle = 360 - angle;
   return angle;
@@ -111,13 +113,17 @@ function toRiskTier(bsi: number): "low" | "moderate" | "high" | "critical" {
 function hasValidLandmarks(def: JointDefinition, landmarks: any[]): boolean {
   return [def.proximal, def.vertex, def.distal].every((idx) => {
     const lm = landmarks[idx];
-    return lm != null && (lm.visibility == null || lm.visibility >= VISIBILITY_THRESHOLD);
+    return (
+      lm != null &&
+      (lm.visibility == null || lm.visibility >= VISIBILITY_THRESHOLD)
+    );
   });
 }
 
 class SkeletalSense {
   private calculateAngle(a: any, b: any, c: any): number {
-    const radians = Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x);
+    const radians =
+      Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x);
     let angle = Math.abs((radians * 180.0) / Math.PI);
     if (angle > 180.0) angle = 360 - angle;
     return angle;
@@ -127,10 +133,18 @@ class SkeletalSense {
     if (!landmarks || landmarks.length < 33) return null;
 
     // 1. Extract Key Joints
-    const lElbow = landmarks[13], lShoulder = landmarks[11], lWrist = landmarks[15];
-    const rElbow = landmarks[14], rShoulder = landmarks[12], rWrist = landmarks[16];
-    const lHip = landmarks[23], lKnee = landmarks[25], lAnkle = landmarks[27];
-    const rHip = landmarks[24], rKnee = landmarks[26], rAnkle = landmarks[28];
+    const lElbow = landmarks[13],
+      lShoulder = landmarks[11],
+      lWrist = landmarks[15];
+    const rElbow = landmarks[14],
+      rShoulder = landmarks[12],
+      rWrist = landmarks[16];
+    const lHip = landmarks[23],
+      lKnee = landmarks[25],
+      lAnkle = landmarks[27];
+    const rHip = landmarks[24],
+      rKnee = landmarks[26],
+      rAnkle = landmarks[28];
 
     // 2. Calculate Angles
     const leftArmAngle = this.calculateAngle(lShoulder, lElbow, lWrist);
@@ -146,12 +160,18 @@ class SkeletalSense {
     }
 
     // BICEP CURL: Significant elbow bend + arms mostly vertical
-    if ((leftArmAngle < 60 || rightArmAngle < 60) && Math.abs(lShoulder.x - lElbow.x) < 0.1) {
-      return { label: "BICEP CURL", confidence: 0.90 };
+    if (
+      (leftArmAngle < 60 || rightArmAngle < 60) &&
+      Math.abs(lShoulder.x - lElbow.x) < 0.1
+    ) {
+      return { label: "BICEP CURL", confidence: 0.9 };
     }
 
     // PUSHUP: Horizontal body alignment (shoulders and hips same height)
-    if (Math.abs(lShoulder.y - lHip.y) < 0.15 && Math.abs(lShoulder.y - landmarks[0].y) < 0.2) {
+    if (
+      Math.abs(lShoulder.y - lHip.y) < 0.15 &&
+      Math.abs(lShoulder.y - landmarks[0].y) < 0.2
+    ) {
       // Check for arm movement in and out of 90 degrees
       return { label: "PUSHUP", confidence: 0.85 };
     }
@@ -164,7 +184,10 @@ class SkeletalSense {
     }
 
     // PLANK: Steady horizontal posture
-    if (Math.abs(lShoulder.y - lHip.y) < 0.1 && Math.abs(lHip.y - lAnkle.y) < 0.1) {
+    if (
+      Math.abs(lShoulder.y - lHip.y) < 0.1 &&
+      Math.abs(lHip.y - lAnkle.y) < 0.1
+    ) {
       return { label: "PLANK", confidence: 0.82 };
     }
 
@@ -188,9 +211,14 @@ class SkeletalSense {
     const durationSeconds =
       (frames[frames.length - 1].timestamp - frames[0].timestamp) / 1000;
 
-    const joints = JOINT_DEFINITIONS.map((def) => this._computeJointStress(def, frames));
-    const sessionBSI = joints.reduce((sum, j) => sum + j.bsi, 0) / joints.length;
-    const mostStressed = joints.reduce((prev, curr) => (curr.bsi > prev.bsi ? curr : prev));
+    const joints = JOINT_DEFINITIONS.map((def) =>
+      this._computeJointStress(def, frames),
+    );
+    const sessionBSI =
+      joints.reduce((sum, j) => sum + j.bsi, 0) / joints.length;
+    const mostStressed = joints.reduce((prev, curr) =>
+      curr.bsi > prev.bsi ? curr : prev,
+    );
     const sessionRiskTier = toRiskTier(sessionBSI);
 
     return {
@@ -211,44 +239,83 @@ class SkeletalSense {
 
     const result: Record<string, number> = {};
     for (const def of JOINT_DEFINITIONS) {
-      if (!hasValidLandmarks(def, frameA.landmarks) || !hasValidLandmarks(def, frameB.landmarks)) continue;
+      if (
+        !hasValidLandmarks(def, frameA.landmarks) ||
+        !hasValidLandmarks(def, frameB.landmarks)
+      )
+        continue;
 
-      const angleA = jointAngleDeg(frameA.landmarks[def.proximal], frameA.landmarks[def.vertex], frameA.landmarks[def.distal]);
-      const angleB = jointAngleDeg(frameB.landmarks[def.proximal], frameB.landmarks[def.vertex], frameB.landmarks[def.distal]);
+      const angleA = jointAngleDeg(
+        frameA.landmarks[def.proximal],
+        frameA.landmarks[def.vertex],
+        frameA.landmarks[def.distal],
+      );
+      const angleB = jointAngleDeg(
+        frameB.landmarks[def.proximal],
+        frameB.landmarks[def.vertex],
+        frameB.landmarks[def.distal],
+      );
       const bsi = clamp(
-        WEIGHT_SPEED * normalise(Math.abs(angleB - angleA) / dtSeconds, 0, SPEED_MAX_DEG_S) +
-        WEIGHT_ROM * normalise(Math.abs(angleB - angleA), 0, ROM_MAX_DEG),
-        0, 100
+        WEIGHT_SPEED *
+          normalise(Math.abs(angleB - angleA) / dtSeconds, 0, SPEED_MAX_DEG_S) +
+          WEIGHT_ROM * normalise(Math.abs(angleB - angleA), 0, ROM_MAX_DEG),
+        0,
+        100,
       );
       result[def.name] = parseFloat(bsi.toFixed(2));
     }
     return result;
   }
 
-  private _computeJointStress(def: JointDefinition, frames: PoseFrame[]): JointStressEntry {
+  private _computeJointStress(
+    def: JointDefinition,
+    frames: PoseFrame[],
+  ): JointStressEntry {
     const angles: number[] = [];
     const velocities: number[] = [];
 
     for (const frame of frames) {
       if (!hasValidLandmarks(def, frame.landmarks)) continue;
-      angles.push(jointAngleDeg(frame.landmarks[def.proximal], frame.landmarks[def.vertex], frame.landmarks[def.distal]));
+      angles.push(
+        jointAngleDeg(
+          frame.landmarks[def.proximal],
+          frame.landmarks[def.vertex],
+          frame.landmarks[def.distal],
+        ),
+      );
     }
 
     for (let i = 1; i < frames.length; i++) {
-      const lmA = frames[i - 1].landmarks, lmB = frames[i].landmarks;
+      const lmA = frames[i - 1].landmarks,
+        lmB = frames[i].landmarks;
       const dt = (frames[i].timestamp - frames[i - 1].timestamp) / 1000;
-      if (dt <= 0 || !hasValidLandmarks(def, lmA) || !hasValidLandmarks(def, lmB)) continue;
-      const aA = jointAngleDeg(lmA[def.proximal], lmA[def.vertex], lmA[def.distal]);
-      const aB = jointAngleDeg(lmB[def.proximal], lmB[def.vertex], lmB[def.distal]);
+      if (
+        dt <= 0 ||
+        !hasValidLandmarks(def, lmA) ||
+        !hasValidLandmarks(def, lmB)
+      )
+        continue;
+      const aA = jointAngleDeg(
+        lmA[def.proximal],
+        lmA[def.vertex],
+        lmA[def.distal],
+      );
+      const aB = jointAngleDeg(
+        lmB[def.proximal],
+        lmB[def.vertex],
+        lmB[def.distal],
+      );
       velocities.push(Math.abs(aB - aA) / dt);
     }
 
     const peakSpeed = velocities.length > 0 ? Math.max(...velocities) : 0;
-    const rangeOfMotion = angles.length > 1 ? Math.max(...angles) - Math.min(...angles) : 0;
+    const rangeOfMotion =
+      angles.length > 1 ? Math.max(...angles) - Math.min(...angles) : 0;
     const bsi = clamp(
       WEIGHT_SPEED * normalise(peakSpeed, 0, SPEED_MAX_DEG_S) +
-      WEIGHT_ROM * normalise(rangeOfMotion, 0, ROM_MAX_DEG),
-      0, 100
+        WEIGHT_ROM * normalise(rangeOfMotion, 0, ROM_MAX_DEG),
+      0,
+      100,
     );
 
     return {
@@ -260,11 +327,9 @@ class SkeletalSense {
       riskTier: toRiskTier(bsi),
     };
   }
-
 }
 
 export const skeletalSense = new SkeletalSense();
-
 
 export function toBSIDashboardSeries(report: BSIReport): BSIDashboardSeries {
   return {

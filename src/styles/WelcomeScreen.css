@@ -10,13 +10,26 @@
   --text-secondary: rgba(255, 255, 255, 0.7);
   --text-dim: rgba(255, 255, 255, 0.5);
   --text-muted: rgba(255, 255, 255, 0.3);
-  --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
-  
+  --font-heading: "Inter", system-ui, -apple-system, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+
   /* Background colors for smooth transitions */
-  --bg-hero: radial-gradient(ellipse at 50% 30%, rgba(0, 20, 40, 0.95), rgba(0, 0, 0, 0.98));
-  --bg-how-it-works: linear-gradient(180deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 15, 25, 0.95) 50%, rgba(0, 0, 0, 0.95) 100%);
-  --bg-footer: linear-gradient(180deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 5, 15, 0.98) 100%);
+  --bg-hero: radial-gradient(
+    ellipse at 50% 30%,
+    rgba(0, 20, 40, 0.95),
+    rgba(0, 0, 0, 0.98)
+  );
+  --bg-how-it-works: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 15, 25, 0.95) 50%,
+    rgba(0, 0, 0, 0.95) 100%
+  );
+  --bg-footer: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 5, 15, 0.98) 100%
+  );
 }
 
 /* =============================================
@@ -48,14 +61,15 @@
 
 /* Subtle divider line between hero and how-it-works */
 .hero-section::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 80%;
   height: 1px;
-  background: linear-gradient(90deg,
+  background: linear-gradient(
+    90deg,
     transparent 0%,
     rgba(0, 240, 255, 0.15) 20%,
     rgba(0, 240, 255, 0.4) 50%,
@@ -146,7 +160,7 @@
   font-weight: 900;
   letter-spacing: 14px;
   color: var(--neon-cyan);
-  text-shadow: 
+  text-shadow:
     0 0 20px rgba(0, 240, 255, 0.8),
     0 0 40px rgba(0, 240, 255, 0.6),
     0 0 60px rgba(0, 240, 255, 0.4),
@@ -195,19 +209,24 @@
 }
 
 .btn-primary::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 240, 255, 0.2),
+    transparent
+  );
   transition: left 0.5s ease;
 }
 
 .btn-primary:hover {
   background: rgba(0, 240, 255, 0.1);
-  box-shadow: 
+  box-shadow:
     0 0 20px rgba(0, 240, 255, 0.4),
     0 0 40px rgba(0, 240, 255, 0.2),
     inset 0 0 20px rgba(0, 240, 255, 0.1);
@@ -290,7 +309,7 @@
 
 /* Add subtle gradient mask at top for blending */
 .how-it-works-section::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -303,7 +322,7 @@
 
 /* Add subtle gradient mask at bottom for blending */
 .how-it-works-section::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -388,7 +407,7 @@
 .step-card:hover {
   transform: translateY(-8px);
   border-color: rgba(0, 240, 255, 0.4);
-  box-shadow: 
+  box-shadow:
     0 20px 40px rgba(0, 0, 0, 0.4),
     0 0 30px rgba(0, 240, 255, 0.1);
   background: rgba(10, 20, 30, 0.6);
@@ -413,7 +432,11 @@
   width: 70px;
   height: 70px;
   margin: 0 auto 24px;
-  background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(0, 240, 255, 0.02));
+  background: linear-gradient(
+    135deg,
+    rgba(0, 240, 255, 0.1),
+    rgba(0, 240, 255, 0.02)
+  );
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -455,7 +478,7 @@
 
 /* Add subtle gradient mask at top for blending */
 .footer::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -577,15 +600,16 @@
 }
 
 @keyframes glow {
-  0%, 100% {
-    text-shadow: 
+  0%,
+  100% {
+    text-shadow:
       0 0 20px rgba(0, 240, 255, 0.8),
       0 0 40px rgba(0, 240, 255, 0.6),
       0 0 60px rgba(0, 240, 255, 0.4),
       0 0 80px rgba(0, 240, 255, 0.2);
   }
   50% {
-    text-shadow: 
+    text-shadow:
       0 0 30px rgba(0, 240, 255, 0.9),
       0 0 50px rgba(0, 240, 255, 0.7),
       0 0 70px rgba(0, 240, 255, 0.5),
@@ -640,9 +664,22 @@
   --text-muted: rgba(255, 255, 255, 0.3);
   --neon-cyan: #00f0ff;
   --neon-yellow: #ffd600;
-  --bg-hero: radial-gradient(ellipse at 50% 30%, rgba(0, 20, 40, 0.95), rgba(0, 0, 0, 0.98));
-  --bg-how-it-works: linear-gradient(180deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 15, 25, 0.95) 50%, rgba(0, 0, 0, 0.95) 100%);
-  --bg-footer: linear-gradient(180deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 5, 15, 0.98) 100%);
+  --bg-hero: radial-gradient(
+    ellipse at 50% 30%,
+    rgba(0, 20, 40, 0.95),
+    rgba(0, 0, 0, 0.98)
+  );
+  --bg-how-it-works: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 15, 25, 0.95) 50%,
+    rgba(0, 0, 0, 0.95) 100%
+  );
+  --bg-footer: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 5, 15, 0.98) 100%
+  );
   --card-bg: rgba(10, 20, 30, 0.4);
   --card-border: rgba(0, 240, 255, 0.1);
 }
@@ -667,9 +704,22 @@
   --text-muted: rgba(10, 20, 40, 0.35);
   --neon-cyan: #0066cc;
   --neon-yellow: #c97a00;
-  --bg-hero: radial-gradient(ellipse at 50% 30%, rgba(220, 235, 255, 0.98), rgba(240, 248, 255, 1));
-  --bg-how-it-works: linear-gradient(180deg, rgba(240, 248, 255, 1) 0%, rgba(225, 240, 255, 1) 50%, rgba(240, 248, 255, 1) 100%);
-  --bg-footer: linear-gradient(180deg, rgba(240, 248, 255, 1) 0%, rgba(210, 230, 255, 1) 100%);
+  --bg-hero: radial-gradient(
+    ellipse at 50% 30%,
+    rgba(220, 235, 255, 0.98),
+    rgba(240, 248, 255, 1)
+  );
+  --bg-how-it-works: linear-gradient(
+    180deg,
+    rgba(240, 248, 255, 1) 0%,
+    rgba(225, 240, 255, 1) 50%,
+    rgba(240, 248, 255, 1) 100%
+  );
+  --bg-footer: linear-gradient(
+    180deg,
+    rgba(240, 248, 255, 1) 0%,
+    rgba(210, 230, 255, 1) 100%
+  );
   --card-bg: rgba(255, 255, 255, 0.85);
   --card-border: rgba(0, 102, 204, 0.18);
 }
@@ -718,11 +768,19 @@
 }
 
 .welcome-container[data-theme="light"] .how-it-works-section::before {
-  background: linear-gradient(180deg, rgba(240, 248, 255, 1) 0%, transparent 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(240, 248, 255, 1) 0%,
+    transparent 100%
+  );
 }
 
 .welcome-container[data-theme="light"] .how-it-works-section::after {
-  background: linear-gradient(0deg, rgba(240, 248, 255, 1) 0%, transparent 100%);
+  background: linear-gradient(
+    0deg,
+    rgba(240, 248, 255, 1) 0%,
+    transparent 100%
+  );
 }
 
 .welcome-container[data-theme="light"] .footer {
@@ -730,7 +788,11 @@
 }
 
 .welcome-container[data-theme="light"] .footer::before {
-  background: linear-gradient(180deg, rgba(240, 248, 255, 1) 0%, transparent 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(240, 248, 255, 1) 0%,
+    transparent 100%
+  );
 }
 
 .welcome-container[data-theme="light"] .footer-brand-desc {
@@ -789,11 +851,13 @@
   color: var(--neon-cyan);
 }
 
-.welcome-container[data-theme="light"] .welcome-container::-webkit-scrollbar-track {
+.welcome-container[data-theme="light"]
+  .welcome-container::-webkit-scrollbar-track {
   background: rgba(0, 102, 204, 0.05);
 }
 
-.welcome-container[data-theme="light"] .welcome-container::-webkit-scrollbar-thumb {
+.welcome-container[data-theme="light"]
+  .welcome-container::-webkit-scrollbar-thumb {
   background: rgba(0, 102, 204, 0.2);
 }
 
@@ -884,7 +948,7 @@
     grid-template-columns: 1fr 1fr;
     gap: 30px;
   }
-  
+
   .how-it-works-section {
     padding: 70px 24px 80px;
   }
@@ -898,7 +962,7 @@
   .how-it-works-section {
     padding: 50px 16px 60px;
   }
-  
+
   .footer {
     padding: 40px 15px 20px;
   }
@@ -948,11 +1012,11 @@
     background: white;
     color: black;
   }
-  
+
   .particle-canvas {
     display: none;
   }
-  
+
   .btn-primary,
   .btn-secondary {
     border: 2px solid black;

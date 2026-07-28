@@ -1,4 +1,4 @@
-import type { Results } from '@mediapipe/pose';
+import type { Results } from "@mediapipe/pose";
 
 /**
  * calibrationLogic.ts
@@ -6,7 +6,7 @@ import type { Results } from '@mediapipe/pose';
  */
 
 export interface CalibrationResult {
-  status: 'red' | 'yellow' | 'green';
+  status: "red" | "yellow" | "green";
   message: string;
   isReady: boolean;
   visibleCount: number;
@@ -22,11 +22,11 @@ export class CalibrationLogic {
   evaluate(results: Results): CalibrationResult {
     if (!results.poseLandmarks) {
       return {
-        status: 'red',
-        message: 'No body detected. Step into frame.',
+        status: "red",
+        message: "No body detected. Step into frame.",
         isReady: false,
         visibleCount: 0,
-        totalCount: 8
+        totalCount: 8,
       };
     }
 
@@ -35,26 +35,30 @@ export class CalibrationLogic {
     // Key indices for full body tracking
     // 11, 12 (shoulders), 23, 24 (hips), 25, 26 (knees), 27, 28 (ankles)
     const requiredIndices = [11, 12, 23, 24, 25, 26, 27, 28];
-    const visibleCount = requiredIndices.filter(i => landmarks[i] && (landmarks[i].visibility || 0) > this.visibilityThreshold).length;
+    const visibleCount = requiredIndices.filter(
+      (i) =>
+        landmarks[i] &&
+        (landmarks[i].visibility || 0) > this.visibilityThreshold,
+    ).length;
 
     // Check if full body is in frame
     if (visibleCount < 4) {
       return {
-        status: 'red',
-        message: 'Step back. Full body must be visible.',
+        status: "red",
+        message: "Step back. Full body must be visible.",
         isReady: false,
         visibleCount,
-        totalCount: requiredIndices.length
+        totalCount: requiredIndices.length,
       };
     }
 
     if (visibleCount < 8) {
       return {
-        status: 'yellow',
-        message: 'Adjust position. Ankles or knees not clear.',
+        status: "yellow",
+        message: "Adjust position. Ankles or knees not clear.",
         isReady: false,
         visibleCount,
-        totalCount: requiredIndices.length
+        totalCount: requiredIndices.length,
       };
     }
 
@@ -62,21 +66,21 @@ export class CalibrationLogic {
     const midShoulderX = (landmarks[11].x + landmarks[12].x) / 2;
     if (midShoulderX < 0.2 || midShoulderX > 0.8) {
       return {
-        status: 'yellow',
-        message: 'Center your body in the frame.',
+        status: "yellow",
+        message: "Center your body in the frame.",
         isReady: false,
         visibleCount,
-        totalCount: requiredIndices.length
+        totalCount: requiredIndices.length,
       };
     }
 
     // High confidence + full body
     return {
-      status: 'green',
-      message: 'Good position. Calibration complete.',
+      status: "green",
+      message: "Good position. Calibration complete.",
       isReady: true,
       visibleCount,
-      totalCount: requiredIndices.length
+      totalCount: requiredIndices.length,
     };
   }
 }

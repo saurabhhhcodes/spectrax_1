@@ -70,7 +70,9 @@ const SessionCard: React.FC<SessionCardProps> = ({ session, onDelete }) => {
       <div className="card-body">
         {/* Header row */}
         <div className="card-header">
-          <span className="exercise-badge">{formatExerciseName(session.exerciseType)}</span>
+          <span className="exercise-badge">
+            {formatExerciseName(session.exerciseType)}
+          </span>
 
           <button
             className={`delete-btn ${confirmDelete ? "confirm" : ""}`}
@@ -85,7 +87,11 @@ const SessionCard: React.FC<SessionCardProps> = ({ session, onDelete }) => {
 
         {/* Stats grid */}
         <div className="stats-grid">
-          <Stat icon={<Zap size={14} />} label="Reps" value={session.totalReps} />
+          <Stat
+            icon={<Zap size={14} />}
+            label="Reps"
+            value={session.totalReps}
+          />
           <Stat
             icon={<Target size={14} />}
             label="Accuracy"

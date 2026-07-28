@@ -58,10 +58,7 @@ export function updateWorkoutStreak(): WorkoutStreakData {
     currentStreak = 1;
   }
 
-  const longestStreak = Math.max(
-    currentStreak,
-    streakData.longestStreak
-  );
+  const longestStreak = Math.max(currentStreak, streakData.longestStreak);
 
   const updatedData = {
     currentStreak,

@@ -58,14 +58,14 @@ Mobile browsers can run the app, but performance varies:
 
 ### Q4. What software do I need before I clone the repo?
 
-| Requirement | Version | Notes |
-|---|---|---|
-| [Node.js](https://nodejs.org/) | **18.x or higher** | LTS recommended |
-| npm or yarn | npm 9+ | Ships with Node 18 |
-| Git | any recent version | |
-| A modern browser | latest Chrome/Edge/Firefox/Safari | See [Q2](#q2-which-browsers-and-devices-are-supported) |
-| Webcam | any USB or built-in | Required for pose features |
-| A Firebase project | optional for local dev | Needed only for auth/storage features — see [Q6](#q6-do-i-need-a-firebase-account-just-to-run-spectrax-locally) |
+| Requirement                    | Version                           | Notes                                                                                                           |
+| ------------------------------ | --------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| [Node.js](https://nodejs.org/) | **18.x or higher**                | LTS recommended                                                                                                 |
+| npm or yarn                    | npm 9+                            | Ships with Node 18                                                                                              |
+| Git                            | any recent version                |                                                                                                                 |
+| A modern browser               | latest Chrome/Edge/Firefox/Safari | See [Q2](#q2-which-browsers-and-devices-are-supported)                                                          |
+| Webcam                         | any USB or built-in               | Required for pose features                                                                                      |
+| A Firebase project             | optional for local dev            | Needed only for auth/storage features — see [Q6](#q6-do-i-need-a-firebase-account-just-to-run-spectrax-locally) |
 
 ### Q5. What environment variables do I need to configure?
 
@@ -146,12 +146,12 @@ If any of these fail, jump to the relevant section below.
 
 This error comes from [src/services/cameraService.ts](src/services/cameraService.ts) when `getUserMedia` is rejected. Re-enable camera access for `http://localhost:5173`:
 
-| Browser | Steps |
-|---|---|
-| **Chrome** | Click the 🔒/ℹ️ icon left of the URL → Site settings → Camera → **Allow**. Or visit `chrome://settings/content/camera`. |
-| **Edge** | 🔒 icon → Permissions for this site → Camera → **Allow**. Or `edge://settings/content/camera`. |
+| Browser     | Steps                                                                                                                      |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------- |
+| **Chrome**  | Click the 🔒/ℹ️ icon left of the URL → Site settings → Camera → **Allow**. Or visit `chrome://settings/content/camera`.    |
+| **Edge**    | 🔒 icon → Permissions for this site → Camera → **Allow**. Or `edge://settings/content/camera`.                             |
 | **Firefox** | 🔒 icon → Connection secure → More information → Permissions → Camera → uncheck **Block**. Or `about:preferences#privacy`. |
-| **Safari** | Safari → Settings → Websites → Camera → set localhost to **Allow**. |
+| **Safari**  | Safari → Settings → Websites → Camera → set localhost to **Allow**.                                                        |
 
 After changing the setting, **reload the page** (`Ctrl/Cmd + R`).
 

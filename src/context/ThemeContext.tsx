@@ -1,18 +1,18 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from "react";
 import React from "react";
 
-export type Theme = 'cyber-dark' | 'retro' | 'light';
+export type Theme = "cyber-dark" | "retro" | "light";
 
-export const VALID_THEMES: Theme[] = ['cyber-dark', 'retro', 'light'];
+export const VALID_THEMES: Theme[] = ["cyber-dark", "retro", "light"];
 
 export function sanitizeTheme(val: unknown): Theme {
-  if (typeof val === 'string' && VALID_THEMES.includes(val as Theme)) {
+  if (typeof val === "string" && VALID_THEMES.includes(val as Theme)) {
     return val as Theme;
   }
-  if (val === 'dark') {
-    return 'cyber-dark';
+  if (val === "dark") {
+    return "cyber-dark";
   }
-  return 'cyber-dark'; // Secure fallback
+  return "cyber-dark"; // Secure fallback
 }
 
 interface ThemeContextType {
@@ -26,29 +26,34 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
     // 1. Check localStorage first
-    const saved = localStorage.getItem('spectrax-theme');
+    const saved = localStorage.getItem("spectrax-theme");
     const validated = sanitizeTheme(saved);
     if (saved) return validated;
-    
+
     // 2. Fallback to system preference
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'cyber-dark' : 'light';
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "cyber-dark"
+      : "light";
   });
 
   useEffect(() => {
     const validatedTheme = sanitizeTheme(theme);
-    
+
     // Apply dual-attributes: data-theme for legacy compatibility, data-theme-style for specific themes
-    document.documentElement.setAttribute('data-theme', validatedTheme === 'light' ? 'light' : 'dark');
-    document.documentElement.setAttribute('data-theme-style', validatedTheme);
-    
-    localStorage.setItem('spectrax-theme', validatedTheme);
+    document.documentElement.setAttribute(
+      "data-theme",
+      validatedTheme === "light" ? "light" : "dark",
+    );
+    document.documentElement.setAttribute("data-theme-style", validatedTheme);
+
+    localStorage.setItem("spectrax-theme", validatedTheme);
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme(prev => {
-      if (prev === 'cyber-dark') return 'retro';
-      if (prev === 'retro') return 'light';
-      return 'cyber-dark';
+    setTheme((prev) => {
+      if (prev === "cyber-dark") return "retro";
+      if (prev === "retro") return "light";
+      return "cyber-dark";
     });
   };
 
@@ -61,6 +66,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
 export function useTheme(): ThemeContextType {
   const ctx = useContext(ThemeContext);
-  if (!ctx) throw new Error('useTheme must be used inside ThemeProvider');
+  if (!ctx) throw new Error("useTheme must be used inside ThemeProvider");
   return ctx;
 }

@@ -92,7 +92,10 @@ export const FpsMonitor: React.FC = () => {
       <Activity size={14} color="var(--neon-cyan)" />
       <span
         style={{
-          color: fps >= 15 ? "var(--neon-green, #4ade80)" : "var(--neon-yellow, #facc15)",
+          color:
+            fps >= 15
+              ? "var(--neon-green, #4ade80)"
+              : "var(--neon-yellow, #facc15)",
           fontFamily: "monospace",
           fontSize: "0.9rem",
           fontWeight: 700,

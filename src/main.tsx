@@ -4,15 +4,15 @@ import App from "./App.tsx";
 import { ThemeProvider } from "./context/ThemeContext.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import "./index.css";
-import { registerSW } from 'virtual:pwa-register';
+import { registerSW } from "virtual:pwa-register";
 
 // Register PWA Service Worker for offline support
 const updateSW = registerSW({
   onNeedRefresh() {
-    console.log('PWA: Update available');
+    console.log("PWA: Update available");
   },
   onOfflineReady() {
-    console.log('PWA: Offline ready');
+    console.log("PWA: Offline ready");
   },
 });
 

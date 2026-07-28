@@ -335,32 +335,32 @@ class SessionRecorder {
     this.displacements = [];
     telemetryBroker.logState("SessionRecorder_Start");
   }
-recordFrame(frame: FrameData) {
-  if (this._frameCount >= MAX_FRAMES) {
-    const first = this.compressedFrames[0];
-    if (first && first.runLength > 1) {
-      first.runLength--;
-      first.timestamp += first.timestampDelta || 33;
-    } else {
-      this.compressedFrames.shift();
+  recordFrame(frame: FrameData) {
+    if (this._frameCount >= MAX_FRAMES) {
+      const first = this.compressedFrames[0];
+      if (first && first.runLength > 1) {
+        first.runLength--;
+        first.timestamp += first.timestampDelta || 33;
+      } else {
+        this.compressedFrames.shift();
+      }
+      this._frameCount--;
+
+      if (this.displacements.length >= MAX_FRAMES - 1) {
+        this.displacements.shift();
+      }
     }
-    this._frameCount--;
 
-    if (this.displacements.length >= MAX_FRAMES - 1) {
-      this.displacements.shift();
+    const centroid = this.getCentroid(frame.landmarks);
+    if (centroid && this.lastCentroid) {
+      const dx = centroid.x - this.lastCentroid.x;
+      const dy = centroid.y - this.lastCentroid.y;
+      const distance = Math.hypot(dx, dy);
+      this.displacements.push(distance);
     }
-  }
+    this.lastCentroid = centroid;
 
-  const centroid = this.getCentroid(frame.landmarks);
-  if (centroid && this.lastCentroid) {
-    const dx = centroid.x - this.lastCentroid.x;
-    const dy = centroid.y - this.lastCentroid.y;
-    const distance = Math.hypot(dx, dy);
-    this.displacements.push(distance);
-  }
-  this.lastCentroid = centroid;
-
-  const lastCompressed =
+    const lastCompressed =
       this.compressedFrames[this.compressedFrames.length - 1];
 
     if (

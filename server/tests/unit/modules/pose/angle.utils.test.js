@@ -2,24 +2,24 @@ const {
   calculateAngle,
   computeAngles,
   getBestSide,
-} = require('../../../../src/modules/pose/angle.utils');
+} = require("../../../../src/modules/pose/angle.utils");
 
 function createLandmarks() {
   return Array.from({ length: 33 }, () => ({ x: 0, y: 0, visibility: 0 }));
 }
 
-describe('angle.utils', () => {
-  it('calculates a right angle', () => {
+describe("angle.utils", () => {
+  it("calculates a right angle", () => {
     const angle = calculateAngle(
       { x: 0, y: 1 },
       { x: 0, y: 0 },
-      { x: 1, y: 0 }
+      { x: 1, y: 0 },
     );
 
     expect(angle).toBe(90);
   });
 
-  it('selects the body side with higher average visibility', () => {
+  it("selects the body side with higher average visibility", () => {
     const landmarks = createLandmarks();
 
     [11, 13, 15, 23, 25, 27].forEach((index) => {
@@ -30,10 +30,10 @@ describe('angle.utils', () => {
       landmarks[index].visibility = 0.2;
     });
 
-    expect(getBestSide(landmarks)).toBe('left');
+    expect(getBestSide(landmarks)).toBe("left");
   });
 
-  it('computes pose angles from the best visible side', () => {
+  it("computes pose angles from the best visible side", () => {
     const landmarks = createLandmarks();
 
     [11, 13, 15, 23, 25, 27].forEach((index) => {

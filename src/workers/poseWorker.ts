@@ -335,7 +335,8 @@ function computeAngles(landmarks: any[]): Record<string, number> {
     hipDepth: Math.round(
       (((ankle?.y || 0) - (hip?.y || 0)) / totalHeight) * 100,
     ),
-    pushupDepthZ: Math.abs((landmarks[ids.s]?.z || 0) - (landmarks[ids.w]?.z || 0)) * 100,
+    pushupDepthZ:
+      Math.abs((landmarks[ids.s]?.z || 0) - (landmarks[ids.w]?.z || 0)) * 100,
   };
 }
 
@@ -473,14 +474,33 @@ function drawGhostSkeleton(landmarks: any[]) {
   ctx.lineWidth = 3;
 
   const connections = [
-    [11, 13], [13, 15],
-    [12, 14], [14, 16],
-    [11, 12], [23, 24], [11, 23], [12, 24],
-    [23, 25], [25, 27], [27, 29], [29, 31], [31, 27],
-    [24, 26], [26, 28], [28, 30], [30, 32], [32, 28],
-    [0, 1], [1, 2], [2, 3], [3, 7],
-    [0, 4], [4, 5], [5, 6], [6, 8],
-    [9, 10]
+    [11, 13],
+    [13, 15],
+    [12, 14],
+    [14, 16],
+    [11, 12],
+    [23, 24],
+    [11, 23],
+    [12, 24],
+    [23, 25],
+    [25, 27],
+    [27, 29],
+    [29, 31],
+    [31, 27],
+    [24, 26],
+    [26, 28],
+    [28, 30],
+    [30, 32],
+    [32, 28],
+    [0, 1],
+    [1, 2],
+    [2, 3],
+    [3, 7],
+    [0, 4],
+    [4, 5],
+    [5, 6],
+    [6, 8],
+    [9, 10],
   ];
 
   ctx.beginPath();

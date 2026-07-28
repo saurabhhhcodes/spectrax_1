@@ -10,6 +10,7 @@ SpectraX is proudly participating in **GirlScript Summer of Code 2026 (GSSoC'26)
 # 🌟 GSSoC'26 Contribution Guidelines
 
 ## 📌 Issue Assignment
+
 - Browse available issues from the Issues section.
 - Comment on the issue you want to work on.
 - Wait until a maintainer assigns the issue to you before starting work.
@@ -27,13 +28,13 @@ Please assign it to me.
 
 Common labels used in this repository:
 
-| Label | Meaning |
-|-------|---------|
-| `gssoc-26` | GSSoC contribution issue |
-| `good first issue` | Beginner-friendly issue |
-| `bug` | Bug fixes |
-| `enhancement` | Feature improvements |
-| `documentation` | Documentation-related tasks |
+| Label              | Meaning                     |
+| ------------------ | --------------------------- |
+| `gssoc-26`         | GSSoC contribution issue    |
+| `good first issue` | Beginner-friendly issue     |
+| `bug`              | Bug fixes                   |
+| `enhancement`      | Feature improvements        |
+| `documentation`    | Documentation-related tasks |
 
 ---
 
@@ -64,13 +65,13 @@ git checkout -b feature/your-feature-name
 
 ### 📌 Branch Naming Conventions
 
-| Prefix | Usage |
-|--------|------|
-| `feature/` | New features |
-| `bugfix/` | Bug fixes |
-| `docs/` | Documentation updates |
-| `refactor/` | Code refactoring |
-| `test/` | Adding tests |
+| Prefix      | Usage                 |
+| ----------- | --------------------- |
+| `feature/`  | New features          |
+| `bugfix/`   | Bug fixes             |
+| `docs/`     | Documentation updates |
+| `refactor/` | Code refactoring      |
+| `test/`     | Adding tests          |
 
 Examples:
 
@@ -123,14 +124,14 @@ Use meaningful commit messages.
 
 ## Recommended Format
 
-| Prefix | Purpose |
-|--------|---------|
-| `feat:` | New feature |
-| `fix:` | Bug fix |
-| `docs:` | Documentation |
-| `style:` | UI/Formatting |
+| Prefix      | Purpose            |
+| ----------- | ------------------ |
+| `feat:`     | New feature        |
+| `fix:`      | Bug fix            |
+| `docs:`     | Documentation      |
+| `style:`    | UI/Formatting      |
 | `refactor:` | Code restructuring |
-| `test:` | Testing |
+| `test:`     | Testing            |
 
 ### ✅ Examples
 
@@ -159,6 +160,7 @@ npm run build
 ```
 
 ## Manual Testing
+
 - Test your feature locally
 - Check browser responsiveness
 - Ensure there are no console errors
@@ -183,6 +185,7 @@ Please follow these practices:
 ## Before Creating PR
 
 Make sure:
+
 - Your branch is updated
 - Code is tested locally
 - Documentation is updated if needed
@@ -224,6 +227,7 @@ To maintain quality contributions:
 # 🤝 Need Help?
 
 If you face setup issues or need guidance:
+
 - Open a discussion
 - Ask in issue comments
 - Reach out to maintainers politely

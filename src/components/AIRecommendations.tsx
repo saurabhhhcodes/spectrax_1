@@ -16,10 +16,7 @@ const priorityColors = {
   low: "var(--neon-green)",
 };
 
-const AIRecommendations: React.FC<Props> = ({
-  recommendations,
-}) => {
-
+const AIRecommendations: React.FC<Props> = ({ recommendations }) => {
   if (!recommendations.length) return null;
 
   return (

@@ -1,4 +1,3 @@
-
 /**
  * calibrationStateEngine.test.ts
  *

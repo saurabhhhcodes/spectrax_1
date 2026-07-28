@@ -9,7 +9,10 @@ import {
   browserLocalPersistence,
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
+import {
+  initializeAppCheck,
+  ReCaptchaEnterpriseProvider,
+} from "firebase/app-check";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -49,7 +52,10 @@ try {
 } catch (e) {
   console.warn("⚠️ Firebase not configured — running in offline/demo mode", e);
   // Create a minimal app stub so imports don't crash
-  app = initializeApp({ apiKey: "demo", projectId: "demo", appId: "demo" }, "demo");
+  app = initializeApp(
+    { apiKey: "demo", projectId: "demo", appId: "demo" },
+    "demo",
+  );
   auth = getAuth(app);
   db = getFirestore(app);
 }

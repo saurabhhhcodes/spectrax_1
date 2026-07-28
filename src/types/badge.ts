@@ -3,7 +3,7 @@ export interface Badge {
   title: string;
   description: string;
   icon: string;
-  criteriaType: 'reps' | 'workouts' | 'accuracy' | 'streak' | 'time';
+  criteriaType: "reps" | "workouts" | "accuracy" | "streak" | "time";
   targetValue: number;
 }
 

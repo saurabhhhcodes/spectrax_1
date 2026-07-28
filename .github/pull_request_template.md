@@ -11,11 +11,13 @@ Fixes #issue_number
 Please provide a clear and concise description of the changes made in this pull request.
 
 ### 🔹 What has been changed?
-- 
-- 
-- 
+
+-
+-
+-
 
 ### 🔹 Why are these changes needed?
+
 Explain the purpose or problem being solved.
 
 ---
@@ -39,6 +41,7 @@ Please mark the relevant option(s):
 Describe how you tested your changes.
 
 ### ✅ Tests Performed
+
 - [ ] Tested locally
 - [ ] Build runs successfully
 - [ ] No console errors
@@ -46,6 +49,7 @@ Describe how you tested your changes.
 - [ ] Existing functionality verified
 
 ### 🌐 Browsers Tested
+
 - [ ] Chrome
 - [ ] Firefox
 - [ ] Edge

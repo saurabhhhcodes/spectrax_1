@@ -18,18 +18,18 @@ const MET_VALUES: Record<string, number> = {
 };
 
 export interface CalorieEstimateInput {
-  exerciseName: string;   // e.g. "Squat", "Push Up"
+  exerciseName: string; // e.g. "Squat", "Push Up"
   totalReps: number;
   durationSeconds: number;
-  accuracyScore: number;  // 0–100, from existing stats
-  userWeightKg?: number;  // optional, defaults to 70kg
+  accuracyScore: number; // 0–100, from existing stats
+  userWeightKg?: number; // optional, defaults to 70kg
 }
 
 export interface CalorieEstimateResult {
-  calories: number;           // estimated kcal burned
-  met: number;                // MET value used
+  calories: number; // estimated kcal burned
+  met: number; // MET value used
   accuracyMultiplier: number; // how accuracy affected the estimate
-  label: string;              // e.g. "Great Burn 🔥"
+  label: string; // e.g. "Great Burn 🔥"
 }
 
 /**
@@ -40,22 +40,26 @@ export interface CalorieEstimateResult {
  * - 100% accuracy → ×1.0 (full effort, full calorie credit)
  * - 0% accuracy   → ×0.7 (sloppy form = less effective movement)
  */
-export function estimateCalories(input: CalorieEstimateInput): CalorieEstimateResult {
-  const key = input.exerciseName.toLowerCase().replace(/\s+/g, '_');
-  const met = MET_VALUES[key] ?? MET_VALUES['default'];
+export function estimateCalories(
+  input: CalorieEstimateInput,
+): CalorieEstimateResult {
+  const key = input.exerciseName.toLowerCase().replace(/\s+/g, "_");
+  const met = MET_VALUES[key] ?? MET_VALUES["default"];
   const weight = input.userWeightKg ?? 70;
   const hours = input.durationSeconds / 3600;
 
   // Accuracy multiplier: 0.7 at 0% accuracy, 1.0 at 100% accuracy
-  const accuracyMultiplier = parseFloat((0.7 + (input.accuracyScore / 100) * 0.3).toFixed(3));
+  const accuracyMultiplier = parseFloat(
+    (0.7 + (input.accuracyScore / 100) * 0.3).toFixed(3),
+  );
 
   const rawCalories = met * weight * hours * accuracyMultiplier;
   const calories = Math.max(1, Math.round(rawCalories));
 
-  let label = 'Solid Burn 💪';
-  if (calories >= 200) label = 'Elite Burn 🏆';
-  else if (calories >= 100) label = 'Great Burn 🔥';
-  else if (calories < 30) label = 'Light Activity 🌱';
+  let label = "Solid Burn 💪";
+  if (calories >= 200) label = "Elite Burn 🏆";
+  else if (calories >= 100) label = "Great Burn 🔥";
+  else if (calories < 30) label = "Light Activity 🌱";
 
   return { calories, met, accuracyMultiplier, label };
 }
@@ -65,7 +69,7 @@ export function estimateCalories(input: CalorieEstimateInput): CalorieEstimateRe
  * Returns null if not set.
  */
 export function getSavedUserWeight(): number | null {
-  const raw = localStorage.getItem('spectrax_user_weight_kg');
+  const raw = localStorage.getItem("spectrax_user_weight_kg");
   if (!raw) return null;
   const parsed = parseFloat(raw);
   return isNaN(parsed) ? null : parsed;
@@ -75,5 +79,5 @@ export function getSavedUserWeight(): number | null {
  * Save user weight to localStorage.
  */
 export function saveUserWeight(weightKg: number): void {
-  localStorage.setItem('spectrax_user_weight_kg', String(weightKg));
+  localStorage.setItem("spectrax_user_weight_kg", String(weightKg));
 }

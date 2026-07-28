@@ -9,7 +9,7 @@
 [![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)](https://socket.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-*Advanced AI-driven fitness companion that tracks your workouts, analyzes form, and visualizes progress in 3D. Proudly participating in GirlScript Summer of Code 2026!*
+_Advanced AI-driven fitness companion that tracks your workouts, analyzes form, and visualizes progress in 3D. Proudly participating in GirlScript Summer of Code 2026!_
 
 [Features](#-features) • [Tech Stack](#-tech-stack) • [Installation](#-installation) • [Usage](#-usage) • [FAQ](FAQ.md) • [Contributing](#-contributing) • [License](#-license)
 
@@ -40,30 +40,37 @@ The project features a full-stack architecture with a React frontend and an Expr
 ## 📸 Screenshots
 
 ### Welcome Screen
+
 ![Welcome Screen](assets/screenshots/01-welcome.png.jpeg)
-*The SpectraX landing page — initialize your session or view workout history.*
+_The SpectraX landing page — initialize your session or view workout history._
 
 ### Exercise Selection — Bodyweight Squats
+
 ![Squats](assets/screenshots/02-exercise-selection-squats.png.jpeg)
-*Select from 5 exercises. Live camera preview updates as you choose.*
+_Select from 5 exercises. Live camera preview updates as you choose._
 
 ### Exercise Selection — Bicep Curls
+
 ![Bicep Curls](assets/screenshots/04-exercise-selection-bicep-curls.png.jpeg)
-*Real-time pose detection ready for bicep curl tracking.*
+_Real-time pose detection ready for bicep curl tracking._
 
 ### Exercise Selection — Plank
+
 ![Plank](assets/screenshots/03-exercise-selection-plank.png.jpeg)
-*Plank hold detection with live camera feed.*
+_Plank hold detection with live camera feed._
 
 ### Exercise Selection — Push-Ups
+
 ![Push-Ups](assets/screenshots/05-exercise-selection-pushup.png.jpeg)
-*Push-up rep counting with form analysis.*
+_Push-up rep counting with form analysis._
 
 ### Session History
+
 ![Session History](assets/screenshots/06-exercise-session-history.png.jpeg)
-*Review past workout sessions and track your progress over time.*
+_Review past workout sessions and track your progress over time._
 
 ### Frontend
+
 - **Framework**: [React 18](https://reactjs.org/)
 - **State Management**: React Hooks & Context
 - **3D Graphics**: [Three.js](https://threejs.org/)
@@ -71,6 +78,7 @@ The project features a full-stack architecture with a React frontend and an Expr
 - **Icons**: [Lucide React](https://lucide.dev/)
 
 ### Backend
+
 - **Server**: [Express.js](https://expressjs.com/)
 - **Real-Time**: [Socket.io](https://socket.io/)
 - **Language**: Node.js (CommonJS)
@@ -79,14 +87,14 @@ The project features a full-stack architecture with a React frontend and an Expr
 
 ## 🛠️ Tech Stack
 
-| Category | Technologies |
-|----------|--------------|
-| Frontend | React 18, TypeScript, Vite |
-| Backend | Node.js, Express.js, Socket.io |
-| AI/ML | MediaPipe Pose, Transformers.js |
-| 3D Rendering | Three.js, WebGL |
-| State Management | React Context API |
-| Icons | Lucide React |
+| Category         | Technologies                    |
+| ---------------- | ------------------------------- |
+| Frontend         | React 18, TypeScript, Vite      |
+| Backend          | Node.js, Express.js, Socket.io  |
+| AI/ML            | MediaPipe Pose, Transformers.js |
+| 3D Rendering     | Three.js, WebGL                 |
+| State Management | React Context API               |
+| Icons            | Lucide React                    |
 
 ---
 
@@ -129,21 +137,24 @@ spectrax_1/
 │── package.json
 ```
 
-
 ## 🚀 Installation
 
 ### Prerequisites
+
 - [Node.js](https://nodejs.org/) (v18.x or higher)
 - [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
 
 ### Steps
+
 1. **Clone the Repo**
+
    ```bash
    git clone https://github.com/Somil450/spectrax_1.git
    cd spectrax_1
    ```
 
 2. **Setup Frontend**
+
    ```bash
    npm install
    ```
@@ -176,6 +187,7 @@ Create a `.env` file inside the `server/` directory:
 ```env
 PORT=3001
 ```
+
 > Never commit `.env` files to version control.
 
 ### Firestore Security Rules
@@ -195,17 +207,21 @@ Without deploying these rules, the project remains in Firebase test mode (effect
 ## 💻 Usage
 
 1. **Start the Backend**
+
    ```bash
    cd server
    npm run dev
    ```
-   *Server runs on `http://localhost:3001`*
+
+   _Server runs on `http://localhost:3001`_
 
 2. **Start the Frontend** (In a new terminal)
+
    ```bash
    npm run dev
    ```
-   *App runs on `http://localhost:5173`*
+
+   _App runs on `http://localhost:5173`_
 
 3. **Workout Flow**
    - **Welcome**: Choose your exercise or let SpectraX auto-detect.
@@ -236,13 +252,13 @@ Currently supported exercises:
 
 ## 📊 Performance Metrics
 
-| Metric | Approximate Value |
-|--------|------------------|
-| Pose Detection FPS | ~30 FPS |
-| Rep Counting Accuracy | ~94% |
-| Detection Latency | <100ms |
-| Supported Resolution | 720p / 1080p |
-| Pose Landmarks | 33 Keypoints |
+| Metric                | Approximate Value |
+| --------------------- | ----------------- |
+| Pose Detection FPS    | ~30 FPS           |
+| Rep Counting Accuracy | ~94%              |
+| Detection Latency     | <100ms            |
+| Supported Resolution  | 720p / 1080p      |
+| Pose Landmarks        | 33 Keypoints      |
 
 > Performance may vary depending on device hardware and lighting conditions.
 
@@ -250,13 +266,13 @@ Currently supported exercises:
 
 ## 📱 Device Compatibility
 
-| Platform | Support |
-|----------|---------|
-| Chrome (Desktop) | ✅ Supported |
-| Edge | ✅ Supported |
-| Firefox | ✅ Supported |
-| Android Chrome | ✅ Supported |
-| Safari | ⚠️ Experimental |
+| Platform         | Support         |
+| ---------------- | --------------- |
+| Chrome (Desktop) | ✅ Supported    |
+| Edge             | ✅ Supported    |
+| Firefox          | ✅ Supported    |
+| Android Chrome   | ✅ Supported    |
+| Safari           | ⚠️ Experimental |
 
 For best performance, use the latest version of Chrome with a stable internet connection.
 
@@ -269,6 +285,7 @@ For best performance, use the latest version of Chrome with a stable internet co
 ```bash
 npm run lint
 ```
+
 ---
 
 ## 🗺️ Roadmap
@@ -312,6 +329,7 @@ and immersive 3D rendering to create a next-generation browser-based
 fitness experience.
 
 Unlike traditional fitness trackers, SpectraX provides:
+
 - real-time posture correction
 - intelligent rep tracking
 - exercise auto-detection

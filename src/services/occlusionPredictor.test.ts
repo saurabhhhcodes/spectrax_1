@@ -1,19 +1,21 @@
 import { OcclusionPredictor, Landmark } from "./occlusionPredictor";
 
-function makeLandmark(x: number, y: number, z: number, visibility: number): Landmark {
+function makeLandmark(
+  x: number,
+  y: number,
+  z: number,
+  visibility: number,
+): Landmark {
   return { x, y, z, visibility };
 }
 
-function fullBody(overrides?: Partial<Record<number, Partial<Landmark>>>): Landmark[] {
+function fullBody(
+  overrides?: Partial<Record<number, Partial<Landmark>>>,
+): Landmark[] {
   const defaultLm = (i: number): Landmark => {
     const isLeft = [11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31].includes(i);
     const side = isLeft ? -0.1 : 0.1;
-    return makeLandmark(
-      0.5 + side,
-      0.5 - i * 0.02,
-      0,
-      0.95,
-    );
+    return makeLandmark(0.5 + side, 0.5 - i * 0.02, 0, 0.95);
   };
   const lms: Landmark[] = [];
   for (let i = 0; i < 33; i++) {

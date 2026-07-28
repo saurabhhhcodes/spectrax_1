@@ -1,4 +1,4 @@
-import { Results, NormalizedLandmarkList } from '@mediapipe/pose';
+import { Results, NormalizedLandmarkList } from "@mediapipe/pose";
 
 /**
  * poseLockService.ts
@@ -7,13 +7,12 @@ import { Results, NormalizedLandmarkList } from '@mediapipe/pose';
  */
 
 export class PoseLockService {
-  
-  private lastCentroid: { x: number, y: number } | null = null;
+  private lastCentroid: { x: number; y: number } | null = null;
   private lastArea: number | null = null;
   private isLocked = false;
   private readonly MOVEMENT_THRESHOLD = 0.25;
   private readonly MOVEMENT_RELEASE_THRESHOLD = 0.35;
-  private readonly SCALE_THRESHOLD = 0.40;
+  private readonly SCALE_THRESHOLD = 0.4;
   private readonly SCALE_RELEASE_THRESHOLD = 0.55;
   private readonly LOCK_THRESHOLD = 0.7;
   private readonly UNLOCK_THRESHOLD = 0.4;
@@ -63,12 +62,16 @@ export class PoseLockService {
     if (this.lastCentroid && this.lastArea !== null) {
       const distance = Math.sqrt(
         Math.pow(currentCentroid.x - this.lastCentroid.x, 2) +
-        Math.pow(currentCentroid.y - this.lastCentroid.y, 2)
+          Math.pow(currentCentroid.y - this.lastCentroid.y, 2),
       );
 
-      const areaChange = Math.abs(currentArea - this.lastArea) / (this.lastArea || 1);
+      const areaChange =
+        Math.abs(currentArea - this.lastArea) / (this.lastArea || 1);
 
-      if (distance > this.MOVEMENT_RELEASE_THRESHOLD || areaChange > this.SCALE_RELEASE_THRESHOLD) {
+      if (
+        distance > this.MOVEMENT_RELEASE_THRESHOLD ||
+        areaChange > this.SCALE_RELEASE_THRESHOLD
+      ) {
         this.reset();
         return null;
       }
@@ -96,7 +99,9 @@ export class PoseLockService {
     }
     const sorted = [...this.confidenceHistory].sort((a, b) => a - b);
     const mid = Math.floor(sorted.length / 2);
-    return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+    return sorted.length % 2 !== 0
+      ? sorted[mid]
+      : (sorted[mid - 1] + sorted[mid]) / 2;
   }
 
   private calculateCentroid(landmarks: NormalizedLandmarkList) {
@@ -115,8 +120,8 @@ export class PoseLockService {
       }
     }
 
-    return count > 0 
-      ? { x: sumX / count, y: sumY / count } 
+    return count > 0
+      ? { x: sumX / count, y: sumY / count }
       : { x: 0.5, y: 0.5 };
   }
 
@@ -136,7 +141,10 @@ export class PoseLockService {
   }
 
   private calculateArea(landmarks: NormalizedLandmarkList) {
-    let minX = 1, maxX = 0, minY = 1, maxY = 0;
+    let minX = 1,
+      maxX = 0,
+      minY = 1,
+      maxY = 0;
     const points = [11, 12, 23, 24, 25, 26, 27, 28, 0]; // Head, shoulders, hips, knees, ankles
 
     for (const i of points) {
@@ -147,7 +155,7 @@ export class PoseLockService {
         maxY = Math.max(maxY, landmarks[i].y);
       }
     }
-    
+
     return Math.max(0, (maxX - minX) * (maxY - minY));
   }
 }

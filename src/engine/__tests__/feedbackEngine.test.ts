@@ -34,7 +34,7 @@ describe("getFeedback", () => {
     // bodyLine < 135 (–35) + horizontalStretch < 40 (–35) → rawScore 30 → red
     const result = getFeedback(
       { bodyLine: 120, horizontalStretch: 30, stage: "up" },
-      "pushup"
+      "pushup",
     );
     expect(result.color).toBe("red");
     // High-severity issue must be surfaced first

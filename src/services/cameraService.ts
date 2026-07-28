@@ -22,7 +22,8 @@ export class CameraService {
   private consecutiveLagFrames: number = 0;
   private lastResultTime: number = 0;
   private downscaleCanvas: HTMLCanvasElement | null = null;
-  private frameCallback: ((source: HTMLVideoElement | HTMLCanvasElement) => void) | null = null;
+  private frameCallback:
+    ((source: HTMLVideoElement | HTMLCanvasElement) => void) | null = null;
 
   /**
    * Requests camera permission and starts the stream.
@@ -36,9 +37,9 @@ export class CameraService {
         video: {
           width: { ideal: 1280 },
           height: { ideal: 720 },
-          frameRate: { ideal: 30 }
+          frameRate: { ideal: 30 },
         },
-        audio: false
+        audio: false,
       });
 
       this.videoElement.srcObject = this.stream;
@@ -52,9 +53,9 @@ export class CameraService {
       });
     } catch (error: any) {
       console.error("Camera access denied or unavailable:", error);
-      if (error.name === 'NotAllowedError') {
+      if (error.name === "NotAllowedError") {
         throw new Error("PERMISSION_DENIED");
-      } else if (error.name === 'NotFoundError') {
+      } else if (error.name === "NotFoundError") {
         throw new Error("NO_CAMERA_FOUND");
       }
       throw error;
@@ -71,7 +72,7 @@ export class CameraService {
     callback: (source: HTMLVideoElement | HTMLCanvasElement) => void,
     fpsLimit: number = 20,
     minFpsLimit: number = 10,
-    fpsDecrementStep: number = 5
+    fpsDecrementStep: number = 5,
   ): void {
     this.frameCallback = callback;
     this.fpsLimit = fpsLimit;
@@ -97,17 +98,18 @@ export class CameraService {
         this.videoElement.readyState >= 2 &&
         !this.videoElement.paused
       ) {
-        this.isProcessing = true;      // Lock — prevent overlapping calls
+        this.isProcessing = true; // Lock — prevent overlapping calls
         this.lastFrameTime = timestamp;
 
-        let sourceToProcess: HTMLVideoElement | HTMLCanvasElement = this.videoElement;
+        let sourceToProcess: HTMLVideoElement | HTMLCanvasElement =
+          this.videoElement;
 
         if (this.resolutionScale < 1.0) {
           if (!this.downscaleCanvas) {
-            this.downscaleCanvas = document.createElement('canvas');
+            this.downscaleCanvas = document.createElement("canvas");
           }
           const canvas = this.downscaleCanvas;
-          const ctx = canvas.getContext('2d', { willReadFrequently: true });
+          const ctx = canvas.getContext("2d", { willReadFrequently: true });
           canvas.width = this.videoElement.videoWidth * this.resolutionScale;
           canvas.height = this.videoElement.videoHeight * this.resolutionScale;
           if (ctx) {
@@ -151,12 +153,12 @@ export class CameraService {
             if (this.fpsLimit > this.minFpsLimit) {
               this.fpsLimit -= this.fpsDecrementStep;
               console.warn(
-                `[Performance] Lag detected. Dropping sample frequency to ${this.fpsLimit} FPS`
+                `[Performance] Lag detected. Dropping sample frequency to ${this.fpsLimit} FPS`,
               );
             } else if (this.resolutionScale > 0.5) {
               this.resolutionScale -= 0.25;
               console.warn(
-                `[Performance] Lag detected. Dropping resolution scale to ${this.resolutionScale}`
+                `[Performance] Lag detected. Dropping resolution scale to ${this.resolutionScale}`,
               );
             }
             this.consecutiveLagFrames = 0;
@@ -189,7 +191,7 @@ export class CameraService {
     this.stopFrameLoop(); // Always stop loop before stopping camera
 
     if (this.stream) {
-      this.stream.getTracks().forEach(track => track.stop());
+      this.stream.getTracks().forEach((track) => track.stop());
       this.stream = null;
     }
     if (this.videoElement) {

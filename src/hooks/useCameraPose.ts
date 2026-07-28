@@ -1,7 +1,7 @@
-import { useEffect, useRef, useCallback } from 'react';
-import { cameraService } from '../services/cameraService';
-import { poseService } from '../services/poseService';
-import { overlayRenderer } from '../services/overlayRenderer';
+import { useEffect, useRef, useCallback } from "react";
+import { cameraService } from "../services/cameraService";
+import { poseService } from "../services/poseService";
+import { overlayRenderer } from "../services/overlayRenderer";
 
 interface UseCameraPoseOptions {
   videoRef?: React.RefObject<HTMLVideoElement>;
@@ -51,7 +51,7 @@ export function useCameraPose({
 
     try {
       if (setupContext) {
-        const ctx = canvasRef.current.getContext('2d');
+        const ctx = canvasRef.current.getContext("2d");
         if (ctx) overlayRenderer.setContext(ctx);
       }
 
@@ -74,7 +74,7 @@ export function useCameraPose({
         },
         initialFpsLimit,
         minFpsLimit,
-        fpsDecrementStep
+        fpsDecrementStep,
       );
     } catch (err) {
       if (isMountedRef.current && onCameraErrorRef.current) {
@@ -83,7 +83,14 @@ export function useCameraPose({
         throw err;
       }
     }
-  }, [videoRef, canvasRef, setupContext, initialFpsLimit, minFpsLimit, fpsDecrementStep]);
+  }, [
+    videoRef,
+    canvasRef,
+    setupContext,
+    initialFpsLimit,
+    minFpsLimit,
+    fpsDecrementStep,
+  ]);
 
   const stopSystem = useCallback(() => {
     isMountedRef.current = false;

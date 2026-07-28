@@ -1,20 +1,20 @@
 // hooks/useAnomalyDetection.ts — SpectraX Anomaly Detection Module (Issue #85)
 
-import { useState, useCallback, useRef, useMemo } from 'react';
+import { useState, useCallback, useRef, useMemo } from "react";
 import {
   extractFeatures,
   detectAnomalies,
   findSimilarFrames,
   smoothLandmarks,
-} from '../lib/anomalyDetection';
+} from "../lib/anomalyDetection";
 import type {
   PoseFrame,
   EnrichedFrame,
   DetectionSummary,
   AnomalyAlgorithm,
   SimilarFrame,
-} from '../types/anomaly';
-import type { NormalizedLandmarkList } from '@mediapipe/pose'; // MediaPipe type
+} from "../types/anomaly";
+import type { NormalizedLandmarkList } from "@mediapipe/pose"; // MediaPipe type
 
 export interface UseAnomalyDetectionOptions {
   /** Detection algorithm (default: 'zscore') */
@@ -73,10 +73,10 @@ export function useAnomalyDetection(
   options: UseAnomalyDetectionOptions = {},
 ): UseAnomalyDetectionReturn {
   const {
-    algorithm       = 'zscore',
-    threshold       = 2.0,
-    bufferSize      = 300,
-    smoothing       = true,
+    algorithm = "zscore",
+    threshold = 2.0,
+    bufferSize = 300,
+    smoothing = true,
     smoothingWindow = 5,
   } = options;
 
@@ -84,10 +84,10 @@ export function useAnomalyDetection(
   const frameCounter = useRef(0);
   const startTime = useRef<number | null>(null);
 
-  const [summary, setSummary]           = useState<DetectionSummary | null>(null);
-  const [enrichedFrames, setEnriched]   = useState<EnrichedFrame[]>([]);
-  const [isRunning, setIsRunning]       = useState(false);
-  const [frameCount, setFrameCount]     = useState(0);
+  const [summary, setSummary] = useState<DetectionSummary | null>(null);
+  const [enrichedFrames, setEnriched] = useState<EnrichedFrame[]>([]);
+  const [isRunning, setIsRunning] = useState(false);
+  const [frameCount, setFrameCount] = useState(0);
 
   /**
    * Record a single pose frame from MediaPipe.
@@ -100,10 +100,13 @@ export function useAnomalyDetection(
       const ts = timestamp ?? (Date.now() - startTime.current) / 1000;
 
       const frame: PoseFrame = {
-        frameId:   frameCounter.current++,
+        frameId: frameCounter.current++,
         timestamp: +ts.toFixed(3),
-        landmarks: landmarks.map(lm => ({
-          x: lm.x, y: lm.y, z: lm.z, visibility: lm.visibility ?? 1,
+        landmarks: landmarks.map((lm) => ({
+          x: lm.x,
+          y: lm.y,
+          z: lm.z,
+          visibility: lm.visibility ?? 1,
         })),
       };
 
@@ -125,7 +128,9 @@ export function useAnomalyDetection(
   const runDetection = useCallback((): DetectionSummary | null => {
     const raw = frameBuffer.current;
     if (raw.length < 5) {
-      console.warn('[SpectraX] Not enough frames to run anomaly detection (need ≥ 5).');
+      console.warn(
+        "[SpectraX] Not enough frames to run anomaly detection (need ≥ 5).",
+      );
       return null;
     }
 
@@ -136,7 +141,7 @@ export function useAnomalyDetection(
       const prepared = smoothing ? smoothLandmarks(raw, smoothingWindow) : raw;
 
       // Feature extraction
-      const enriched: EnrichedFrame[] = prepared.map(f => ({
+      const enriched: EnrichedFrame[] = prepared.map((f) => ({
         ...f,
         features: extractFeatures(f.landmarks),
       }));

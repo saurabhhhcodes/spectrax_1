@@ -11,7 +11,7 @@ import { exercises, ExerciseConfig } from "./config/exercises";
 import { BodyType } from "./services/bodyTypeEngine";
 import { useTheme } from "./context/ThemeContext";
 import HistoryPage from "./HistoryPage";
-import { useLeveling } from './hooks/useLeveling';
+import { useLeveling } from "./hooks/useLeveling";
 import { SummaryScreenSkeleton } from "./components/SummaryScreenSkeleton";
 import { useAuth } from "./context/AuthContext";
 import { LoginScreen } from "./components/LoginScreen";
@@ -22,8 +22,6 @@ import { useWorkoutSync } from "./hooks/useWorkoutSync";
 import { useRegisterSW } from "virtual:pwa-register/react";
 import { estimateCalories, getSavedUserWeight } from "./utils/calorieEstimator";
 import React from "react";
-
-
 
 type Screen =
   | "welcome"
@@ -65,7 +63,7 @@ function App() {
   useEffect(() => {
     if (currentScreen !== "workout") {
       if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current.getTracks().forEach((track) => track.stop());
         streamRef.current = null;
       }
     }
@@ -119,14 +117,22 @@ function App() {
     if (!authLoading) {
       if (!user) {
         setCurrentScreen((prev) => {
-          if (prev !== "login" && prev !== "signup" && prev !== "forgot-password") {
+          if (
+            prev !== "login" &&
+            prev !== "signup" &&
+            prev !== "forgot-password"
+          ) {
             return "login";
           }
           return prev;
         });
       } else {
         setCurrentScreen((prev) => {
-          if (prev === "login" || prev === "signup" || prev === "forgot-password") {
+          if (
+            prev === "login" ||
+            prev === "signup" ||
+            prev === "forgot-password"
+          ) {
             return "welcome";
           }
           return prev;
@@ -152,11 +158,11 @@ function App() {
       userWeightKg: getSavedUserWeight() ?? 70,
     });
 
-    const fullStats = { 
-      ...finalStats, 
-      exerciseName: selectedExercise.name, 
+    const fullStats = {
+      ...finalStats,
+      exerciseName: selectedExercise.name,
       gainedXp,
-      calories: calorieResult.calories,  // ADD THIS
+      calories: calorieResult.calories, // ADD THIS
     };
 
     // Award badges based on completed session
@@ -215,12 +221,16 @@ function App() {
 
   // If not authenticated and Firebase is configured, show auth screens
   if (firebaseConfigured && !user) {
-    const activeAuthScreen = ["login", "signup", "forgot-password"].includes(currentScreen)
+    const activeAuthScreen = ["login", "signup", "forgot-password"].includes(
+      currentScreen,
+    )
       ? currentScreen
       : "login";
     return (
       <main className="spectrax-app">
-        {(currentScreen === "login" || (currentScreen !== "signup" && currentScreen !== "forgot-password")) && (
+        {(currentScreen === "login" ||
+          (currentScreen !== "signup" &&
+            currentScreen !== "forgot-password")) && (
           <LoginScreen
             onLoginSuccess={() => navigateTo("welcome")}
             onSignUpClick={() => navigateTo("signup")}
@@ -239,7 +249,6 @@ function App() {
       </main>
     );
   }
-    
 
   // If authenticated, show main app with theme toggle and workout screens
   return (
@@ -280,8 +289,6 @@ function App() {
         </button>
       </div>
 
-
-      
       {currentScreen === "welcome" && (
         <WelcomeScreen
           onStart={() => navigateTo("calibration")}
@@ -292,7 +299,13 @@ function App() {
         />
       )}
 
-      <Suspense fallback={<div className="loading-container"><div className="spinner" /></div>}>
+      <Suspense
+        fallback={
+          <div className="loading-container">
+            <div className="spinner" />
+          </div>
+        }
+      >
         {currentScreen === "calibration" && (
           <CalibrationScreen
             selectedExercise={selectedExercise}
@@ -351,7 +364,9 @@ function App() {
             {offlineReady ? (
               <span>App is ready to work offline!</span>
             ) : (
-              <span>New content available, click on reload button to update.</span>
+              <span>
+                New content available, click on reload button to update.
+              </span>
             )}
           </div>
           <div className="pwa-toast-buttons">
@@ -363,84 +378,87 @@ function App() {
                 Reload
               </button>
             )}
-            <button className="pwa-toast-btn secondary" onClick={closeOfflineNotification}>
+            <button
+              className="pwa-toast-btn secondary"
+              onClick={closeOfflineNotification}
+            >
               Close
             </button>
           </div>
         </div>
       )}
       {showExitModal && (
-  <div
-    style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      background: 'rgba(0,0,0,0.5)',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      zIndex: 999,
-      backdropFilter: 'blur(8px)'
-    }}
-  >
-    <div
-      style={{
-        background: 'rgba(255,255,255,0.1)',
-        border: '1px solid rgba(255,255,255,0.2)',
-        borderRadius: '20px',
-        padding: '30px',
-        width: '320px',
-        textAlign: 'center',
-        color: 'white',
-        backdropFilter: 'blur(15px)',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
-      }}
-    >
-      <h2>Confirm Exit</h2>
-
-      <p>Are you sure you want to end your session?</p>
-
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          marginTop: '20px'
-        }}
-      >
-        <button
-          onClick={() => setShowExitModal(false)}
+        <div
           style={{
-            padding: '10px 20px',
-            borderRadius: '10px',
-            border: 'none',
-            cursor: 'pointer'
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0,0,0,0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 999,
+            backdropFilter: "blur(8px)",
           }}
         >
-          Stay
-        </button>
+          <div
+            style={{
+              background: "rgba(255,255,255,0.1)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              borderRadius: "20px",
+              padding: "30px",
+              width: "320px",
+              textAlign: "center",
+              color: "white",
+              backdropFilter: "blur(15px)",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
+            }}
+          >
+            <h2>Confirm Exit</h2>
 
-        <button
-          onClick={() => {
-            setShowExitModal(false);
-            navigateTo('welcome');
-          }}
-          style={{
-            padding: '10px 20px',
-            borderRadius: '10px',
-            border: 'none',
-            cursor: 'pointer',
-            background: '#ff4d4f',
-            color: 'white'
-          }}
-        >
-          Exit
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+            <p>Are you sure you want to end your session?</p>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginTop: "20px",
+              }}
+            >
+              <button
+                onClick={() => setShowExitModal(false)}
+                style={{
+                  padding: "10px 20px",
+                  borderRadius: "10px",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                Stay
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowExitModal(false);
+                  navigateTo("welcome");
+                }}
+                style={{
+                  padding: "10px 20px",
+                  borderRadius: "10px",
+                  border: "none",
+                  cursor: "pointer",
+                  background: "#ff4d4f",
+                  color: "white",
+                }}
+              >
+                Exit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

@@ -1,16 +1,15 @@
-
 /**
  * gpuAngleUtils.ts
  * WebGPU-accelerated bone angle calculator.
  * Falls back to CPU (angleUtils) if WebGPU is unavailable.
  */
 
-import { getJointAngles } from './angleUtils';
+import { getJointAngles } from "./angleUtils";
 
 // WGSL compute shader — runs entirely on GPU
 // Each landmark is packed as vec4<f32>: x, y, z, visibility
 // Computes angles for: knee, elbow, shoulder, bodyLine
-const WGSL_SHADER = /* wgsl */`
+const WGSL_SHADER = /* wgsl */ `
 struct Landmark {
   x: f32,
   y: f32,
@@ -68,14 +67,19 @@ fn main() {
 
 // Output keys matching getJointAngles
 const ANGLE_KEYS = [
-  'knee', 'elbow', 'shoulder', 'bodyLine',
-  'hipDepth', 'lateralScore', 'horizontalStretch',
+  "knee",
+  "elbow",
+  "shoulder",
+  "bodyLine",
+  "hipDepth",
+  "lateralScore",
+  "horizontalStretch",
 ] as const;
 
-const LM_COUNT  = 33;
+const LM_COUNT = 33;
 const FLOATS_PER_LM = 4; // x, y, z, visibility
-const LM_BUF_BYTES  = LM_COUNT * FLOATS_PER_LM * 4;
-const ANGLE_COUNT   = 7;
+const LM_BUF_BYTES = LM_COUNT * FLOATS_PER_LM * 4;
+const ANGLE_COUNT = 7;
 const ANGLE_BUF_BYTES = ANGLE_COUNT * 4;
 
 export class GpuAngleCalculator {
@@ -112,8 +116,8 @@ export class GpuAngleCalculator {
       const module = this.device.createShaderModule({ code: WGSL_SHADER });
 
       this.pipeline = this.device.createComputePipeline({
-        layout: 'auto',
-        compute: { module, entryPoint: 'main' },
+        layout: "auto",
+        compute: { module, entryPoint: "main" },
       });
 
       this.bindGroup = this.device.createBindGroup({
@@ -125,17 +129,24 @@ export class GpuAngleCalculator {
       });
 
       this.ready = true;
-      console.log('GpuAngleCalculator: WebGPU initialized.');
+      console.log("GpuAngleCalculator: WebGPU initialized.");
       return true;
     } catch (e) {
-      console.warn('GpuAngleCalculator: WebGPU init failed, will use CPU.', e);
+      console.warn("GpuAngleCalculator: WebGPU init failed, will use CPU.", e);
       return false;
     }
   }
 
   async compute(landmarks: any[]): Promise<Record<string, number>> {
-    if (!this.ready || !this.device || !this.pipeline ||
-        !this.landmarkBuf || !this.angleBuf || !this.readbackBuf || !this.bindGroup) {
+    if (
+      !this.ready ||
+      !this.device ||
+      !this.pipeline ||
+      !this.landmarkBuf ||
+      !this.angleBuf ||
+      !this.readbackBuf ||
+      !this.bindGroup
+    ) {
       return getJointAngles(landmarks);
     }
 
@@ -143,7 +154,7 @@ export class GpuAngleCalculator {
     const lmData = new Float32Array(LM_COUNT * FLOATS_PER_LM);
     for (let i = 0; i < LM_COUNT; i++) {
       const lm = landmarks[i] ?? { x: 0, y: 0, z: 0, visibility: 0 };
-      lmData[i * FLOATS_PER_LM]     = lm.x;
+      lmData[i * FLOATS_PER_LM] = lm.x;
       lmData[i * FLOATS_PER_LM + 1] = lm.y;
       lmData[i * FLOATS_PER_LM + 2] = lm.z ?? 0;
       lmData[i * FLOATS_PER_LM + 3] = lm.visibility ?? 1;
@@ -157,7 +168,13 @@ export class GpuAngleCalculator {
     pass.setBindGroup(0, this.bindGroup);
     pass.dispatchWorkgroups(1);
     pass.end();
-    encoder.copyBufferToBuffer(this.angleBuf, 0, this.readbackBuf, 0, ANGLE_BUF_BYTES);
+    encoder.copyBufferToBuffer(
+      this.angleBuf,
+      0,
+      this.readbackBuf,
+      0,
+      ANGLE_BUF_BYTES,
+    );
     this.device.queue.submit([encoder.finish()]);
 
     await this.readbackBuf.mapAsync(GPUMapMode.READ);
@@ -165,7 +182,9 @@ export class GpuAngleCalculator {
     this.readbackBuf.unmap();
 
     const out: Record<string, number> = {};
-    ANGLE_KEYS.forEach((key, i) => { out[key] = result[i]; });
+    ANGLE_KEYS.forEach((key, i) => {
+      out[key] = result[i];
+    });
     return out;
   }
 
