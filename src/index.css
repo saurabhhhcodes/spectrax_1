@@ -4,7 +4,9 @@
    ═══════════════════════════════════════════════════════════════ */
 
 /* ── Reset & Base ─────────────────────────────────────────────── */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -12,8 +14,8 @@
 
 :root {
   /* Fonts */
-  --font-heading: 'Orbitron', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --font-heading: "Orbitron", sans-serif;
+  --font-body: "Inter", sans-serif;
 
   /* Radius */
   --radius-sm: 8px;
@@ -25,7 +27,8 @@
 
 /* Explicit Dark Mode (Default) */
 
-:root, [data-theme="dark"] {
+:root,
+[data-theme="dark"] {
   /* Background */
   --bg-primary: #0a0a1a;
   --bg-secondary: #0d1127;
@@ -53,14 +56,12 @@
   --text-dim: rgba(232, 236, 244, 0.6);
 }
 
-
 /* =========================================
    PREMIUM LIGHT THEME
 ========================================= */
 
 [data-theme="light"],
 [data-theme-style="light"] {
-
   /* Backgrounds */
   --bg-primary: #f4f7fb;
   --bg-secondary: #ffffff;
@@ -79,13 +80,11 @@
   --neon-orange: #ea580c;
 
   /* Glass */
-  --glass-bg: rgba(255,255,255,0.75);
+  --glass-bg: rgba(255, 255, 255, 0.75);
 
-  --glass-border:
-    rgba(255,255,255,0.45);
+  --glass-border: rgba(255, 255, 255, 0.45);
 
-  --glass-shadow:
-    0 8px 30px rgba(15,23,42,0.08);
+  --glass-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
 
   --glass-blur: 18px;
 
@@ -135,43 +134,47 @@ body,
 .btn-outline,
 .theme-toggle,
 .welcome-screen {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 /* Smooth transition when theme switches (targeted selectors for high performance) */
-body, 
+body,
 header,
 main,
 section,
 footer,
-.screen-container, 
-.spectrax-app, 
-.welcome-screen, 
+.screen-container,
+.spectrax-app,
+.welcome-screen,
 .calibration-screen,
 .workout-screen,
 .summary-screen,
-.exercise-panel, 
-.select-exercise-panel, 
-.auth-card, 
+.exercise-panel,
+.select-exercise-panel,
+.auth-card,
 .btn-neon,
 .btn-outline,
 .theme-selector-segmented,
 .selector-btn,
-button, 
-p, 
-h1, 
-h2, 
-h3, 
+button,
+p,
+h1,
+h2,
+h3,
 span,
 a,
 label,
 input {
-  transition: background 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              backdrop-filter 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    background 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    backdrop-filter 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ── Segmented Capsule Theme Picker ───────────────────────────────── */
@@ -207,7 +210,9 @@ input {
   border-radius: 999px;
   background: var(--neon-cyan);
   opacity: 0.85;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.35s ease;
+  transition:
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.35s ease;
   pointer-events: none;
   z-index: 0;
 }
@@ -256,16 +261,20 @@ input {
 
 /* Custom override for Retro CRT text glow and screen effect */
 [data-theme-style="retro"] .text-glow {
-  text-shadow: 0 0 10px rgba(255, 176, 0, 0.8), 0 0 20px rgba(255, 176, 0, 0.4);
+  text-shadow:
+    0 0 10px rgba(255, 176, 0, 0.8),
+    0 0 20px rgba(255, 176, 0, 0.4);
 }
 
 [data-theme-style="retro"] h1 {
-  text-shadow: 0 0 15px rgba(255, 176, 0, 0.9), 0 0 30px rgba(255, 176, 0, 0.5);
+  text-shadow:
+    0 0 15px rgba(255, 176, 0, 0.9),
+    0 0 30px rgba(255, 176, 0, 0.5);
 }
 
-
-
-html, body, #root {
+html,
+body,
+#root {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -292,25 +301,18 @@ body {
 
 [data-theme="light"] .camera-viewport,
 [data-theme-style="light"] .camera-viewport {
-
   background:
     radial-gradient(
       circle at top left,
-      rgba(37,99,235,0.10),
+      rgba(37, 99, 235, 0.1),
       transparent 30%
     ),
-
     radial-gradient(
       circle at bottom right,
-      rgba(124,58,237,0.08),
+      rgba(124, 58, 237, 0.08),
       transparent 30%
     ),
-
-    linear-gradient(
-      135deg,
-      #f8fbff 0%,
-      #eef4ff 100%
-    ) !important;
+    linear-gradient(135deg, #f8fbff 0%, #eef4ff 100%) !important;
 }
 
 /* ── UI Framework ─────────────────────────────────────────────── */
@@ -390,13 +392,26 @@ body {
 
 /* ── Animations ──────────────────────────────────────────────── */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.8); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
 }
 
 .animate-in {
@@ -455,12 +470,20 @@ body {
 
 /* ── Welcome Screen Themed Background ────────────────────────── */
 .welcome-screen {
-  background: radial-gradient(ellipse at bottom, #0f1b3e 0%, var(--bg-primary) 100%);
+  background: radial-gradient(
+    ellipse at bottom,
+    #0f1b3e 0%,
+    var(--bg-primary) 100%
+  );
   transition: background 0.6s var(--ease-out);
 }
 
 [data-theme="light"] .welcome-screen {
-  background: radial-gradient(ellipse at bottom, #dbe9ff 0%, var(--bg-primary) 100%);
+  background: radial-gradient(
+    ellipse at bottom,
+    #dbe9ff 0%,
+    var(--bg-primary) 100%
+  );
 }
 
 .spectrax-app {
@@ -508,7 +531,9 @@ body {
 .workout-lock-toggle.is-unlocked {
   color: var(--neon-yellow);
   border-color: rgba(255, 214, 0, 0.38);
-  box-shadow: var(--glass-shadow), 0 0 24px rgba(255, 214, 0, 0.16);
+  box-shadow:
+    var(--glass-shadow),
+    0 0 24px rgba(255, 214, 0, 0.16);
 }
 
 .workout-panel-layer {
@@ -561,7 +586,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  border-left: 3px solid #9D4EDD;
+  border-left: 3px solid #9d4edd;
 }
 
 .workout-finish-action {
@@ -780,7 +805,12 @@ body {
   font-size: clamp(2rem, 10vw, 5.5rem);
   font-weight: 900;
   letter-spacing: clamp(2px, 1.5vw, 14px);
-  background: linear-gradient(135deg, #ffffff 0%, var(--neon-cyan) 55%, var(--neon-purple) 100%);
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    var(--neon-cyan) 55%,
+    var(--neon-purple) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -904,8 +934,11 @@ body {
   font-weight: 600;
   text-transform: none;
   cursor: pointer;
-  transition: background 0.22s ease, border-color 0.22s ease,
-    box-shadow 0.22s ease, transform 0.18s ease;
+  transition:
+    background 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    transform 0.18s ease;
 }
 
 .welcome-btn-secondary--cyan {
@@ -1063,19 +1096,17 @@ body {
 /* Background */
 [data-theme-style="light"] .camera-viewport {
   background:
-    radial-gradient(circle at top left,
-      rgba(37,99,235,0.10),
-      transparent 30%),
-
-    radial-gradient(circle at bottom right,
-      rgba(124,58,237,0.08),
-      transparent 30%),
-
-    linear-gradient(
-      135deg,
-      #f8fbff 0%,
-      #eef4ff 100%
-    ) !important;
+    radial-gradient(
+      circle at top left,
+      rgba(37, 99, 235, 0.1),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(124, 58, 237, 0.08),
+      transparent 30%
+    ),
+    linear-gradient(135deg, #f8fbff 0%, #eef4ff 100%) !important;
 }
 
 /* Text */
@@ -1092,35 +1123,25 @@ body {
 [data-theme-style="light"] .text-glow {
   color: #2563eb !important;
 
-  text-shadow:
-    0 0 18px rgba(37,99,235,0.18) !important;
+  text-shadow: 0 0 18px rgba(37, 99, 235, 0.18) !important;
 }
 
 /* Glass Cards */
 [data-theme-style="light"] .glass {
-  background:
-    rgba(255,255,255,0.82) !important;
+  background: rgba(255, 255, 255, 0.82) !important;
 
-  border:
-    1px solid rgba(255,255,255,0.5) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
 
-  backdrop-filter:
-    blur(18px);
+  backdrop-filter: blur(18px);
 
   opacity: 1 !important;
 
-  box-shadow:
-    0 8px 30px rgba(15,23,42,0.08) !important;
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08) !important;
 }
 
 /* Buttons */
 [data-theme-style="light"] .btn-neon {
-  background:
-    linear-gradient(
-      135deg,
-      #2563eb,
-      #4f46e5
-    ) !important;
+  background: linear-gradient(135deg, #2563eb, #4f46e5) !important;
 
   color: white !important;
 }
@@ -1130,18 +1151,13 @@ body {
 
 [data-theme="light"] .glass,
 [data-theme-style="light"] .glass {
+  background: rgba(255, 255, 255, 0.78);
 
-  background:
-    rgba(255,255,255,0.78);
+  border: 1px solid rgba(255, 255, 255, 0.45);
 
-  border:
-    1px solid rgba(255,255,255,0.45);
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
 
-  box-shadow:
-    0 8px 30px rgba(15,23,42,0.08);
-
-  backdrop-filter:
-    blur(18px);
+  backdrop-filter: blur(18px);
 }
 
 /* Text visibility */
@@ -1150,20 +1166,17 @@ body {
 [data-theme="light"] h3,
 [data-theme="light"] p,
 [data-theme="light"] span,
-
 [data-theme-style="light"] h1,
 [data-theme-style="light"] h2,
 [data-theme-style="light"] h3,
 [data-theme-style="light"] p,
 [data-theme-style="light"] span {
-
   opacity: 1 !important;
 }
 
 /* Better heading glow */
 .text-glow {
-  text-shadow:
-    0 0 18px rgba(37,99,235,0.18);
+  text-shadow: 0 0 18px rgba(37, 99, 235, 0.18);
 }
 /* =========================================
    LIGHT MODE TEXT VISIBILITY FIX
@@ -1171,7 +1184,6 @@ body {
 
 [data-theme="light"],
 [data-theme-style="light"] {
-
   --text-primary: #0f172a;
   --text-secondary: #334155;
   --text-dim: #64748b;
@@ -1180,10 +1192,8 @@ body {
 /* Subtitle */
 [data-theme="light"] .hero-subtitle,
 [data-theme-style="light"] .hero-subtitle,
-
 [data-theme="light"] .welcome-subtitle,
 [data-theme-style="light"] .welcome-subtitle {
-
   color: var(--text-secondary) !important;
 
   opacity: 1 !important;
@@ -1192,13 +1202,10 @@ body {
 /* XP + Level Text */
 [data-theme="light"] .xp-text,
 [data-theme-style="light"] .xp-text,
-
 [data-theme="light"] .level-text,
 [data-theme-style="light"] .level-text,
-
 [data-theme="light"] .progress-text,
 [data-theme-style="light"] .progress-text {
-
   color: var(--text-primary) !important;
 
   opacity: 1 !important;
@@ -1207,10 +1214,8 @@ body {
 /* Stats Labels */
 [data-theme="light"] .stats-label,
 [data-theme-style="light"] .stats-label,
-
 [data-theme="light"] .stats-value,
 [data-theme-style="light"] .stats-value {
-
   color: var(--text-primary) !important;
 
   opacity: 1 !important;
@@ -1221,14 +1226,12 @@ body {
 [data-theme="light"] span,
 [data-theme-style="light"] p,
 [data-theme-style="light"] span {
-
   opacity: 1 !important;
 }
 
 /* Level Card */
 [data-theme="light"] .glass,
 [data-theme-style="light"] .glass {
-
   color: var(--text-primary);
 }
 /* =========================================
@@ -1237,7 +1240,6 @@ body {
 
 [data-theme="light"] *,
 [data-theme-style="light"] * {
-
   color: inherit;
 }
 
@@ -1254,7 +1256,6 @@ body {
 [data-theme-style="light"] h4,
 [data-theme-style="light"] p,
 [data-theme-style="light"] span {
-
   opacity: 1 !important;
 }
 
@@ -1263,7 +1264,6 @@ body {
 [data-theme="light"] span,
 [data-theme-style="light"] p,
 [data-theme-style="light"] span {
-
   color: #334155 !important;
 }
 
@@ -1272,13 +1272,11 @@ body {
 [data-theme="light"] h2,
 [data-theme-style="light"] h1,
 [data-theme-style="light"] h2 {
-
   color: #0f172a !important;
 }
 
 /* Buttons */
 [data-theme="light"] button,
 [data-theme-style="light"] button {
-
   opacity: 1 !important;
 }

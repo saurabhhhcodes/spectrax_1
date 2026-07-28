@@ -1,25 +1,28 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Award, Clock, RotateCcw, Video, Activity } from 'lucide-react';
-import { useWorkoutSync } from '../hooks/useWorkoutSync';
+import React, { useEffect, useMemo, useState } from "react";
+import { Award, Clock, RotateCcw, Video, Activity } from "lucide-react";
+import { useWorkoutSync } from "../hooks/useWorkoutSync";
 import { updateWorkoutStreak } from "../utils/streakUtils";
-import { useAuth } from '../context/AuthContext';
-import { getLocalWorkouts, WorkoutRecord } from '../services/workoutSyncService';
+import { useAuth } from "../context/AuthContext";
+import {
+  getLocalWorkouts,
+  WorkoutRecord,
+} from "../services/workoutSyncService";
 
 interface SummaryScreenProps {
-  stats: { 
-    reps: number; 
+  stats: {
+    reps: number;
     totalReps: number;
     correctReps: number;
     repScores: number[];
     repDeviations?: number[];
-    duration: number; 
-    accuracy: number; 
-    mistakes: Record<string, number>; 
-    bestStreak: number; 
+    duration: number;
+    accuracy: number;
+    mistakes: Record<string, number>;
+    bestStreak: number;
     tags?: string[];
     gainedXp?: number;
     exerciseName?: string;
-    calories?: number; 
+    calories?: number;
   };
   leveling?: {
     xp: number;
@@ -31,7 +34,12 @@ interface SummaryScreenProps {
   onViewReplay: () => void;
 }
 
-export const SummaryScreen: React.FC<SummaryScreenProps> = ({ stats, leveling, onRestart, onViewReplay }) => {
+export const SummaryScreen: React.FC<SummaryScreenProps> = ({
+  stats,
+  leveling,
+  onRestart,
+  onViewReplay,
+}) => {
   const [accuracy, setAccuracy] = useState(0);
   const { user } = useAuth();
   const [workouts, setWorkouts] = useState<WorkoutRecord[]>([]);
@@ -489,51 +497,175 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({ stats, leveling, o
 
       {/* Form Fatigue Insights */}
       {stats.repDeviations && stats.repDeviations.length > 0 && (
-        <div className="glass animate-in" style={{ width: '100%', maxWidth: '600px', padding: '20px', marginBottom: '20px' }}>
-          <div style={{ fontSize: '0.65rem', color: 'var(--neon-yellow)', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '20px', fontWeight: 700, textAlign: 'left' }}>
+        <div
+          className="glass animate-in"
+          style={{
+            width: "100%",
+            maxWidth: "600px",
+            padding: "20px",
+            marginBottom: "20px",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "0.65rem",
+              color: "var(--neon-yellow)",
+              letterSpacing: "2px",
+              textTransform: "uppercase",
+              marginBottom: "20px",
+              fontWeight: 700,
+              textAlign: "left",
+            }}
+          >
             FORM FATIGUE (POSTURE DEVIATION)
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', height: '100px', padding: '0 10px', paddingTop: '10px' }}>
-             {stats.repDeviations.map((dev, index) => {
-               // Normalise deviation to a max of 30 for visualization
-               const maxDev = 30;
-               const heightPct = Math.min(100, Math.max(5, (dev / maxDev) * 100));
-               // Color logic: low deviation is green, high is red
-               const color = dev < 10 ? 'var(--neon-green)' : dev < 20 ? 'var(--neon-yellow)' : 'var(--neon-red)';
-               return (
-                 <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, height: '100%', justifyContent: 'flex-end', gap: '4px' }}>
-                   <span style={{ fontSize: '0.55rem', color: '#fff', opacity: 0.8 }}>{Math.round(dev)}</span>
-                   <div style={{
-                     width: '60%',
-                     maxWidth: '20px',
-                     height: `${heightPct}%`,
-                     background: color,
-                     borderRadius: '2px 2px 0 0',
-                     boxShadow: `0 0 8px ${color}44`,
-                     transition: 'height 1s ease-in-out',
-                     minHeight: '4px'
-                   }}></div>
-                   <span style={{ fontSize: '0.55rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>R{index + 1}</span>
-                 </div>
-               );
-             })}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-end",
+              height: "100px",
+              padding: "0 10px",
+              paddingTop: "10px",
+            }}
+          >
+            {stats.repDeviations.map((dev, index) => {
+              // Normalise deviation to a max of 30 for visualization
+              const maxDev = 30;
+              const heightPct = Math.min(
+                100,
+                Math.max(5, (dev / maxDev) * 100),
+              );
+              // Color logic: low deviation is green, high is red
+              const color =
+                dev < 10
+                  ? "var(--neon-green)"
+                  : dev < 20
+                    ? "var(--neon-yellow)"
+                    : "var(--neon-red)";
+              return (
+                <div
+                  key={index}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    flex: 1,
+                    height: "100%",
+                    justifyContent: "flex-end",
+                    gap: "4px",
+                  }}
+                >
+                  <span
+                    style={{ fontSize: "0.55rem", color: "#fff", opacity: 0.8 }}
+                  >
+                    {Math.round(dev)}
+                  </span>
+                  <div
+                    style={{
+                      width: "60%",
+                      maxWidth: "20px",
+                      height: `${heightPct}%`,
+                      background: color,
+                      borderRadius: "2px 2px 0 0",
+                      boxShadow: `0 0 8px ${color}44`,
+                      transition: "height 1s ease-in-out",
+                      minHeight: "4px",
+                    }}
+                  ></div>
+                  <span
+                    style={{
+                      fontSize: "0.55rem",
+                      color: "var(--text-dim)",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    R{index + 1}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
 
       {stats.gainedXp ? (
-        <div className="glass animate-in" style={{ width: '100%', maxWidth: '600px', padding: '20px', marginBottom: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', borderColor: 'var(--neon-yellow)', background: 'rgba(255, 235, 59, 0.05)' }}>
-           <div style={{ fontSize: '0.8rem', color: 'var(--neon-yellow)', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '8px', fontWeight: 700 }}>XP Gained</div>
-           <div style={{ color: '#fff', fontSize: '2rem', fontWeight: 900, marginBottom: '8px' }}>+{stats.gainedXp} XP</div>
-           {leveling && (
-             <div style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '15px' }}>
-                <span style={{ color: 'var(--text-dim)', fontSize: '0.8rem', fontWeight: 'bold' }}>LVL {leveling.level}</span>
-                <div style={{ flex: 1, height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', overflow: 'hidden' }}>
-                  <div style={{ width: `${leveling.progress}%`, height: '100%', background: 'var(--neon-yellow)' }}></div>
-                </div>
-                <span style={{ color: 'var(--text-dim)', fontSize: '0.8rem' }}>{leveling.nextLevelXp} XP</span>
-             </div>
-           )}
+        <div
+          className="glass animate-in"
+          style={{
+            width: "100%",
+            maxWidth: "600px",
+            padding: "20px",
+            marginBottom: "20px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            borderColor: "var(--neon-yellow)",
+            background: "rgba(255, 235, 59, 0.05)",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "0.8rem",
+              color: "var(--neon-yellow)",
+              letterSpacing: "2px",
+              textTransform: "uppercase",
+              marginBottom: "8px",
+              fontWeight: 700,
+            }}
+          >
+            XP Gained
+          </div>
+          <div
+            style={{
+              color: "#fff",
+              fontSize: "2rem",
+              fontWeight: 900,
+              marginBottom: "8px",
+            }}
+          >
+            +{stats.gainedXp} XP
+          </div>
+          {leveling && (
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                gap: "15px",
+              }}
+            >
+              <span
+                style={{
+                  color: "var(--text-dim)",
+                  fontSize: "0.8rem",
+                  fontWeight: "bold",
+                }}
+              >
+                LVL {leveling.level}
+              </span>
+              <div
+                style={{
+                  flex: 1,
+                  height: "8px",
+                  background: "rgba(255,255,255,0.1)",
+                  borderRadius: "4px",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    width: `${leveling.progress}%`,
+                    height: "100%",
+                    background: "var(--neon-yellow)",
+                  }}
+                ></div>
+              </div>
+              <span style={{ color: "var(--text-dim)", fontSize: "0.8rem" }}>
+                {leveling.nextLevelXp} XP
+              </span>
+            </div>
+          )}
         </div>
       ) : null}
 
@@ -542,50 +674,50 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({ stats, leveling, o
         <div
           className="glass animate-in"
           style={{
-            width: '100%',
-            maxWidth: '600px',
-            padding: '20px',
-            marginBottom: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            borderColor: 'var(--neon-green)',
-            background: 'rgba(0, 255, 100, 0.04)',
-            flexWrap: 'wrap',
-            gap: '12px',
+            width: "100%",
+            maxWidth: "600px",
+            padding: "20px",
+            marginBottom: "20px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            borderColor: "var(--neon-green)",
+            background: "rgba(0, 255, 100, 0.04)",
+            flexWrap: "wrap",
+            gap: "12px",
           }}
         >
           {/* Left: icon + label */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontSize: '2rem' }}>🔥</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <span style={{ fontSize: "2rem" }}>🔥</span>
             <div>
               <div
                 style={{
-                  fontSize: '0.65rem',
-                  color: 'var(--neon-green)',
-                  letterSpacing: '2px',
-                  textTransform: 'uppercase',
+                  fontSize: "0.65rem",
+                  color: "var(--neon-green)",
+                  letterSpacing: "2px",
+                  textTransform: "uppercase",
                   fontWeight: 700,
-                  marginBottom: '4px',
+                  marginBottom: "4px",
                 }}
               >
                 Est. Calories Burned
               </div>
               <div
                 style={{
-                  color: '#fff',
-                  fontSize: '2rem',
+                  color: "#fff",
+                  fontSize: "2rem",
                   fontWeight: 900,
-                  fontFamily: 'var(--font-heading)',
+                  fontFamily: "var(--font-heading)",
                   lineHeight: 1,
                 }}
               >
                 {stats.calories}
                 <span
                   style={{
-                    fontSize: '1rem',
-                    color: 'var(--text-dim)',
-                    marginLeft: '4px',
+                    fontSize: "1rem",
+                    color: "var(--text-dim)",
+                    marginLeft: "4px",
                   }}
                 >
                   kcal
@@ -597,39 +729,42 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({ stats, leveling, o
           {/* Right: accuracy impact note */}
           <div
             style={{
-              textAlign: 'right',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4px',
+              textAlign: "right",
+              display: "flex",
+              flexDirection: "column",
+              gap: "4px",
             }}
           >
             <div
               style={{
-                fontSize: '0.65rem',
-                color: 'var(--text-dim)',
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
+                fontSize: "0.65rem",
+                color: "var(--text-dim)",
+                letterSpacing: "1px",
+                textTransform: "uppercase",
               }}
             >
               Accuracy Impact
             </div>
             <div
               style={{
-                fontSize: '0.85rem',
-                color: stats.accuracy > 75 ? 'var(--neon-green)' : 'var(--neon-yellow)',
+                fontSize: "0.85rem",
+                color:
+                  stats.accuracy > 75
+                    ? "var(--neon-green)"
+                    : "var(--neon-yellow)",
                 fontWeight: 700,
               }}
             >
               {stats.accuracy > 75
-                ? '✅ Full credit'
+                ? "✅ Full credit"
                 : stats.accuracy > 50
-                ? '⚠️ Reduced (form)'
-                : '⬇️ Low (poor form)'}
+                  ? "⚠️ Reduced (form)"
+                  : "⬇️ Low (poor form)"}
             </div>
             <div
               style={{
-                fontSize: '0.7rem',
-                color: 'var(--text-dim)',
+                fontSize: "0.7rem",
+                color: "var(--text-dim)",
               }}
             >
               MET-based estimate
@@ -698,47 +833,144 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({ stats, leveling, o
           </div>
         </div>
       </div>
-{/* Weekly Activity Bar Chart - Added for GSSoC Issue #49 */}
-      <div className="glass animate-in" style={{ width: '100%', maxWidth: '600px', padding: '20px', marginBottom: '20px' }}>
-         <div style={{ fontSize: '0.65rem', color: 'var(--neon-cyan)', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '20px', fontWeight: 700, textAlign: 'left' }}>
-            WEEKLY ACTIVITY (AVG ACCURACY)
-         </div>
-         {hasWeeklyActivity ? (
-         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', height: '140px', padding: '0 10px', paddingTop: '10px' }}>
+      {/* Weekly Activity Bar Chart - Added for GSSoC Issue #49 */}
+      <div
+        className="glass animate-in"
+        style={{
+          width: "100%",
+          maxWidth: "600px",
+          padding: "20px",
+          marginBottom: "20px",
+        }}
+      >
+        <div
+          style={{
+            fontSize: "0.65rem",
+            color: "var(--neon-cyan)",
+            letterSpacing: "2px",
+            textTransform: "uppercase",
+            marginBottom: "20px",
+            fontWeight: 700,
+            textAlign: "left",
+          }}
+        >
+          WEEKLY ACTIVITY (AVG ACCURACY)
+        </div>
+        {hasWeeklyActivity ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-end",
+              height: "140px",
+              padding: "0 10px",
+              paddingTop: "10px",
+            }}
+          >
             {weeklyData.map((item, index) => (
-              <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, height: '100%', justifyContent: 'flex-end' }}>
-                <span style={{ fontSize: '0.65rem', color: '#fff', marginBottom: '4px', opacity: 0.8 }}>
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  flex: 1,
+                  height: "100%",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "0.65rem",
+                    color: "#fff",
+                    marginBottom: "4px",
+                    opacity: 0.8,
+                  }}
+                >
                   {item.score}%
                 </span>
-                
+
                 {/* Fix 1: Fixed-height bar track container to prevent layout overflow */}
-                <div style={{ height: '80px', width: '100%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
-                  <div style={{ 
-                    width: '70%', 
-                    maxWidth: '30px', 
-                    height: `${item.score}%`, 
-                    background: index === 6 ? 'linear-gradient(to top, var(--neon-purple), var(--neon-cyan))' : 'var(--neon-cyan)',
-                    borderRadius: '4px 4px 0 0',
-                    boxShadow: index === 6 ? '0 0 15px var(--neon-purple)' : '0 0 10px var(--neon-cyan)44',
-                    transition: 'height 1s ease-in-out',
-                    minHeight: '5px'
-                  }}></div>
+                <div
+                  style={{
+                    height: "80px",
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "flex-end",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "70%",
+                      maxWidth: "30px",
+                      height: `${item.score}%`,
+                      background:
+                        index === 6
+                          ? "linear-gradient(to top, var(--neon-purple), var(--neon-cyan))"
+                          : "var(--neon-cyan)",
+                      borderRadius: "4px 4px 0 0",
+                      boxShadow:
+                        index === 6
+                          ? "0 0 15px var(--neon-purple)"
+                          : "0 0 10px var(--neon-cyan)44",
+                      transition: "height 1s ease-in-out",
+                      minHeight: "5px",
+                    }}
+                  ></div>
                 </div>
 
-                <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', marginTop: '8px', textTransform: 'uppercase' }}>
+                <span
+                  style={{
+                    fontSize: "0.65rem",
+                    color: "var(--text-dim)",
+                    marginTop: "8px",
+                    textTransform: "uppercase",
+                  }}
+                >
                   {item.day}
                 </span>
               </div>
             ))}
-         </div>
-         ) : (
-         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '140px', color: 'var(--text-dim)', fontSize: '0.85rem', textAlign: 'center', padding: '0 20px' }}>
+          </div>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "140px",
+              color: "var(--text-dim)",
+              fontSize: "0.85rem",
+              textAlign: "center",
+              padding: "0 20px",
+            }}
+          >
             No activity yet. Complete a workout to start your weekly trend.
-         </div>
-         )}
+          </div>
+        )}
       </div>
-      <div className="animate-in glass" style={{ width: '100%', maxWidth: '600px', padding: '15px', textAlign: 'center', marginBottom: '40px', borderColor: accuracyColor }}>
-         <div style={{ color: accuracyColor, fontWeight: 700, fontSize: '0.8rem', letterSpacing: '2px' }}>SESSION RATING: {getPerformanceHighlight()}</div>
+      <div
+        className="animate-in glass"
+        style={{
+          width: "100%",
+          maxWidth: "600px",
+          padding: "15px",
+          textAlign: "center",
+          marginBottom: "40px",
+          borderColor: accuracyColor,
+        }}
+      >
+        <div
+          style={{
+            color: accuracyColor,
+            fontWeight: 700,
+            fontSize: "0.8rem",
+            letterSpacing: "2px",
+          }}
+        >
+          SESSION RATING: {getPerformanceHighlight()}
+        </div>
       </div>
 
       {/* AI Visual Insights */}
@@ -838,7 +1070,7 @@ export const SummaryScreen: React.FC<SummaryScreenProps> = ({ stats, leveling, o
           Longest Streak: {streakData.longestStreak} days
         </p>
       </div>
-      
+
       {/* Action Buttons */}
       <div
         className="animate-in"

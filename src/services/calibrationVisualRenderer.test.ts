@@ -1,4 +1,3 @@
-
 /**
  * calibrationVisualRenderer.test.ts
  *

@@ -18,19 +18,26 @@ class GestureService {
   private getJointVisibility(landmarks: any[], jointIndices: number[]): number {
     if (!landmarks) return 0;
     const visibilities = jointIndices
-      .map(idx => landmarks[idx]?.visibility || 0)
-      .filter(v => v > 0);
-    return visibilities.length > 0 
-      ? visibilities.reduce((a, b) => a + b, 0) / visibilities.length 
+      .map((idx) => landmarks[idx]?.visibility || 0)
+      .filter((v) => v > 0);
+    return visibilities.length > 0
+      ? visibilities.reduce((a, b) => a + b, 0) / visibilities.length
       : 0;
   }
 
-  private isJointAboveJoint(landmarks: any[], sourceIdx: number, targetIdx: number): boolean {
+  private isJointAboveJoint(
+    landmarks: any[],
+    sourceIdx: number,
+    targetIdx: number,
+  ): boolean {
     const source = landmarks[sourceIdx];
     const target = landmarks[targetIdx];
-    
+
     if (!source || !target) return false;
-    if (source.visibility < VISIBILITY_THRESHOLD || target.visibility < VISIBILITY_THRESHOLD) {
+    if (
+      source.visibility < VISIBILITY_THRESHOLD ||
+      target.visibility < VISIBILITY_THRESHOLD
+    ) {
       return false;
     }
 
@@ -79,12 +86,12 @@ class GestureService {
     const leftWristAboveShoulder = this.isJointAboveJoint(
       landmarks,
       leftWristIdx,
-      leftShoulderIdx
+      leftShoulderIdx,
     );
     const rightWristAboveShoulder = this.isJointAboveJoint(
       landmarks,
       rightWristIdx,
-      rightShoulderIdx
+      rightShoulderIdx,
     );
 
     const bothHandsRaised = leftWristAboveShoulder && rightWristAboveShoulder;
@@ -96,13 +103,13 @@ class GestureService {
     const rightIndexIdx = 20;
     const rightPinkyIdx = 18;
 
-    const leftThumbsUp = 
-      this.isJointAboveJoint(landmarks, leftThumbIdx, leftIndexIdx) && 
+    const leftThumbsUp =
+      this.isJointAboveJoint(landmarks, leftThumbIdx, leftIndexIdx) &&
       this.isJointAboveJoint(landmarks, leftThumbIdx, leftPinkyIdx) &&
       this.isJointAboveJoint(landmarks, leftIndexIdx, leftWristIdx);
 
-    const rightThumbsUp = 
-      this.isJointAboveJoint(landmarks, rightThumbIdx, rightIndexIdx) && 
+    const rightThumbsUp =
+      this.isJointAboveJoint(landmarks, rightThumbIdx, rightIndexIdx) &&
       this.isJointAboveJoint(landmarks, rightThumbIdx, rightPinkyIdx) &&
       this.isJointAboveJoint(landmarks, rightIndexIdx, rightWristIdx);
 
@@ -114,13 +121,17 @@ class GestureService {
     const rightWrist = landmarks[rightWristIdx];
     const leftShoulder = landmarks[leftShoulderIdx];
     const leftHip = landmarks[leftHipIdx];
-    
+
     if (leftWrist && rightWrist && leftShoulder && leftHip) {
-      if (leftWrist.visibility > VISIBILITY_THRESHOLD && rightWrist.visibility > VISIBILITY_THRESHOLD) {
+      if (
+        leftWrist.visibility > VISIBILITY_THRESHOLD &&
+        rightWrist.visibility > VISIBILITY_THRESHOLD
+      ) {
         const wristDistX = Math.abs(leftWrist.x - rightWrist.x);
         const wristDistY = Math.abs(leftWrist.y - rightWrist.y);
-        const isBetweenShoulderAndHip = leftWrist.y > leftShoulder.y && leftWrist.y < leftHip.y;
-        
+        const isBetweenShoulderAndHip =
+          leftWrist.y > leftShoulder.y && leftWrist.y < leftHip.y;
+
         // Wrists are very close to each other horizontally and vertically, and at chest level
         if (wristDistX < 0.15 && wristDistY < 0.15 && isBetweenShoulderAndHip) {
           isCrossedArms = true;
@@ -128,12 +139,14 @@ class GestureService {
       }
     }
 
-    this.frameBuffer.push(bothHandsRaised || isThumbsUpDetected || isCrossedArms);
+    this.frameBuffer.push(
+      bothHandsRaised || isThumbsUpDetected || isCrossedArms,
+    );
     if (this.frameBuffer.length > this.bufferSize) {
       this.frameBuffer.shift();
     }
 
-    const raisedFrames = this.frameBuffer.filter(v => v).length;
+    const raisedFrames = this.frameBuffer.filter((v) => v).length;
     const confidence = raisedFrames / this.frameBuffer.length;
 
     return {

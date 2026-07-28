@@ -73,7 +73,7 @@ describe("ExerciseEngine", () => {
       squatConfig,
       { knee: 170 },
       goodVis,
-      state
+      state,
     );
 
     expect(result.reps).toBe(1);
@@ -94,7 +94,7 @@ describe("ExerciseEngine", () => {
       squatConfig,
       { knee: 170 },
       goodVis,
-      state
+      state,
     );
 
     expect(result.reps).toBe(0);
@@ -118,7 +118,7 @@ describe("ExerciseEngine", () => {
       squatConfig,
       { knee: 170 },
       goodVis,
-      state
+      state,
     );
 
     expect(result.currentStreak).toBe(3);
@@ -132,7 +132,7 @@ describe("ExerciseEngine", () => {
       squatConfig,
       { knee: 170 },
       goodVis,
-      state
+      state,
     );
 
     expect(result.totalReps).toBe(0);
@@ -145,7 +145,7 @@ describe("ExerciseEngine", () => {
       squatConfig,
       { knee: 150 },
       { knee: 0.3 },
-      state
+      state,
     );
 
     expect(result).toHaveProperty("status");
@@ -160,7 +160,7 @@ describe("ExerciseEngine", () => {
       squatConfig,
       { knee: 100 },
       goodVis,
-      state
+      state,
     );
 
     expect(result.isCalibrated).toBe(false);

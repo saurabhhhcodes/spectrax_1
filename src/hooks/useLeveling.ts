@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 const XP_PER_REP = 10;
-const STORAGE_KEY = 'spectrax_user_xp';
+const STORAGE_KEY = "spectrax_user_xp";
 
 export function calculateLevel(xp: number): number {
   if (xp < 100) return 1;
@@ -47,7 +47,8 @@ export function useLeveling() {
 
   const currentLevel = calculateLevel(xp);
   const nextLevelXp = calculateXPForNextLevel(currentLevel);
-  const prevLevelXp = currentLevel === 1 ? 0 : calculateXPForNextLevel(currentLevel - 1);
+  const prevLevelXp =
+    currentLevel === 1 ? 0 : calculateXPForNextLevel(currentLevel - 1);
   const progress = ((xp - prevLevelXp) / (nextLevelXp - prevLevelXp)) * 100;
 
   return {
@@ -55,6 +56,6 @@ export function useLeveling() {
     level: currentLevel,
     progress,
     nextLevelXp,
-    addXpFromReps
+    addXpFromReps,
   };
 }

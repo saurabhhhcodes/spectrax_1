@@ -1,12 +1,12 @@
 /* eslint-env browser */
-import './style.css';
-import * as THREE from 'three';
+import "./style.css";
+import * as THREE from "three";
 
 // ═══════════════════════════════════════════════════════════════
 //   APP STATE & ROUTER
 //   ═══════════════════════════════════════════════════════════════
 const state = {
-  currentScreen: '',
+  currentScreen: "",
   timerInterval: null,
   workoutSeconds: 0,
   reps: 0,
@@ -15,35 +15,35 @@ const state = {
 
 function navigate(hash) {
   if (state.currentScreen === hash) return;
-  
+
   // Clean up current screen
   if (state.timerInterval) {
     clearInterval(state.timerInterval);
     state.timerInterval = null;
   }
-  
-  const screens = document.querySelectorAll('.screen');
-  screens.forEach(s => s.classList.remove('active'));
-  
-  const target = document.querySelector(hash || '#welcome-screen');
+
+  const screens = document.querySelectorAll(".screen");
+  screens.forEach((s) => s.classList.remove("active"));
+
+  const target = document.querySelector(hash || "#welcome-screen");
   if (target) {
-    target.classList.add('active');
-    state.currentScreen = hash || '#welcome-screen';
-    
+    target.classList.add("active");
+    state.currentScreen = hash || "#welcome-screen";
+
     // Screen-specific initialization
-    if (state.currentScreen === '#workout-screen') initWorkout();
-    if (state.currentScreen === '#summary-screen') initSummary();
-    if (state.currentScreen === '#replay-screen') initReplay();
+    if (state.currentScreen === "#workout-screen") initWorkout();
+    if (state.currentScreen === "#summary-screen") initSummary();
+    if (state.currentScreen === "#replay-screen") initReplay();
   }
 }
 
-window.addEventListener('hashchange', () => navigate(window.location.hash));
+window.addEventListener("hashchange", () => navigate(window.location.hash));
 
 // ═══════════════════════════════════════════════════════════════
 //   SCREEN RENDERERS
 //   ═══════════════════════════════════════════════════════════════
 
-const app = document.querySelector('#app');
+const app = document.querySelector("#app");
 
 app.innerHTML = `
   <!-- ==========================================
@@ -307,13 +307,13 @@ app.innerHTML = `
 
 // --- Particles (Welcome Screen) ---
 function initParticles() {
-  const canvas = document.getElementById('welcome-canvas');
+  const canvas = document.getElementById("welcome-canvas");
   if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  
+  const ctx = canvas.getContext("2d");
+
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  
+
   const particles = [];
   for (let i = 0; i < 70; i++) {
     particles.push({
@@ -321,52 +321,53 @@ function initParticles() {
       y: Math.random() * canvas.height,
       vx: (Math.random() - 0.5) * 0.5,
       vy: (Math.random() - 0.5) * 0.5,
-      radius: Math.random() * 1.5 + 0.5
+      radius: Math.random() * 1.5 + 0.5,
     });
   }
-  
+
   function animateParticles() {
-    if (state.currentScreen !== '#welcome-screen' && state.currentScreen !== '') return;
-    
+    if (state.currentScreen !== "#welcome-screen" && state.currentScreen !== "")
+      return;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    particles.forEach(p => {
+
+    particles.forEach((p) => {
       p.x += p.vx;
       p.y += p.vy;
-      
+
       if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
       if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-      
+
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(0, 240, 255, 0.4)';
+      ctx.fillStyle = "rgba(0, 240, 255, 0.4)";
       ctx.fill();
     });
-    
+
     // Connect particles
     for (let i = 0; i < particles.length; i++) {
       for (let j = i + 1; j < particles.length; j++) {
         const dx = particles[i].x - particles[j].x;
         const dy = particles[i].y - particles[j].y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        
+
         if (dist < 120) {
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(0, 240, 255, ${0.1 * (1 - dist/120)})`;
+          ctx.strokeStyle = `rgba(0, 240, 255, ${0.1 * (1 - dist / 120)})`;
           ctx.lineWidth = 0.5;
           ctx.stroke();
         }
       }
     }
-    
+
     requestAnimationFrame(animateParticles);
   }
-  
+
   animateParticles();
-  
-  window.addEventListener('resize', () => {
+
+  window.addEventListener("resize", () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   });
@@ -376,69 +377,73 @@ function initParticles() {
 function initWorkout() {
   state.workoutSeconds = 0;
   state.reps = 0;
-  
-  const timerEl = document.getElementById('workout-timer');
-  const repsEl = document.getElementById('workout-reps');
-  const feedbackEl = document.getElementById('live-feedback');
-  const legL = document.getElementById('leg-l-thigh');
-  const legR = document.getElementById('leg-r-thigh');
-  
+
+  const timerEl = document.getElementById("workout-timer");
+  const repsEl = document.getElementById("workout-reps");
+  const feedbackEl = document.getElementById("live-feedback");
+  const legL = document.getElementById("leg-l-thigh");
+  const legR = document.getElementById("leg-r-thigh");
+
   // Update UI loop
   state.timerInterval = setInterval(() => {
     state.workoutSeconds++;
-    
+
     // Format mm:ss
-    const m = Math.floor(state.workoutSeconds / 60).toString().padStart(2, '0');
-    const s = (state.workoutSeconds % 60).toString().padStart(2, '0');
+    const m = Math.floor(state.workoutSeconds / 60)
+      .toString()
+      .padStart(2, "0");
+    const s = (state.workoutSeconds % 60).toString().padStart(2, "0");
     timerEl.textContent = `${m}:${s}`;
-    
+
     // Simulate reps every 4 seconds
     if (state.workoutSeconds % 4 === 0) {
       state.reps++;
       repsEl.textContent = state.reps;
-      
+
       // Simulate form feedback logic
       if (state.reps === 3 || state.reps === 7) {
         feedbackEl.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--neon-yellow)" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                               <span style="color:var(--neon-yellow)">Knees caving inwards. Push out.</span>`;
-        legL.setAttribute('stroke', 'var(--neon-yellow)');
-        legR.setAttribute('stroke', 'var(--neon-yellow)');
+        legL.setAttribute("stroke", "var(--neon-yellow)");
+        legR.setAttribute("stroke", "var(--neon-yellow)");
       } else if (state.reps === 5) {
         feedbackEl.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--neon-red)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
                               <span style="color:var(--neon-red)">Rounding lower back! Keep chest up.</span>`;
-        legL.setAttribute('stroke', 'var(--neon-red)');
-        legR.setAttribute('stroke', 'var(--neon-red)');
+        legL.setAttribute("stroke", "var(--neon-red)");
+        legR.setAttribute("stroke", "var(--neon-red)");
       } else {
         feedbackEl.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--neon-green)" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
                               <span style="color:var(--neon-green)">Perfect form. Keep it up.</span>`;
-        legL.setAttribute('stroke', 'var(--neon-green)');
-        legR.setAttribute('stroke', 'var(--neon-green)');
+        legL.setAttribute("stroke", "var(--neon-green)");
+        legR.setAttribute("stroke", "var(--neon-green)");
       }
     }
-    
+
     // Animate skeleton slightly (simulate breathing/movement)
-    const skel = document.querySelector('.skeleton-svg');
+    const skel = document.querySelector(".skeleton-svg");
     skel.style.transform = `scale(${1 + Math.sin(state.workoutSeconds * 2) * 0.02})`;
-    
   }, 1000);
 }
 
 // --- Summary ---
 function initSummary() {
-  const m = Math.floor(state.workoutSeconds / 60).toString().padStart(2, '0');
-  const s = (state.workoutSeconds % 60).toString().padStart(2, '0');
-  
-  document.getElementById('summary-reps').textContent = state.reps || 12;
-  document.getElementById('summary-time').textContent = state.workoutSeconds > 0 ? `${m}:${s}` : '02:45';
-  
+  const m = Math.floor(state.workoutSeconds / 60)
+    .toString()
+    .padStart(2, "0");
+  const s = (state.workoutSeconds % 60).toString().padStart(2, "0");
+
+  document.getElementById("summary-reps").textContent = state.reps || 12;
+  document.getElementById("summary-time").textContent =
+    state.workoutSeconds > 0 ? `${m}:${s}` : "02:45";
+
   // Animate accuracy ring
   setTimeout(() => {
     const accuracy = 92; // Simulated accuracy
-    document.getElementById('summary-accuracy').textContent = accuracy;
-    
+    document.getElementById("summary-accuracy").textContent = accuracy;
+
     // total dash array length is 440
     const offset = 440 - (440 * accuracy) / 100;
-    document.getElementById('accuracy-ring').style.strokeDashoffset = offset;
+    document.getElementById("accuracy-ring").style.strokeDashoffset = offset;
   }, 500);
 }
 
@@ -448,159 +453,164 @@ let skeletonGroup;
 let animationFrameId;
 
 function initReplay() {
-  const container = document.getElementById('replay-canvas');
+  const container = document.getElementById("replay-canvas");
   if (container.children.length > 0) return; // Already init
-  
+
   replayScene = new THREE.Scene();
   replayScene.fog = new THREE.FogExp2(0x0a0a1a, 0.05);
-  
-  replayCamera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+
+  replayCamera = new THREE.PerspectiveCamera(
+    45,
+    container.clientWidth / container.clientHeight,
+    0.1,
+    1000,
+  );
   replayCamera.position.set(0, 1.5, 4.5);
-  
+
   replayRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   replayRenderer.setSize(container.clientWidth, container.clientHeight);
   container.appendChild(replayRenderer.domElement);
-  
+
   // Lighting
   const ambient = new THREE.AmbientLight(0x404040);
   replayScene.add(ambient);
-  
+
   const neonCyanLight = new THREE.PointLight(0x00f0ff, 2, 10);
   neonCyanLight.position.set(-2, 3, 2);
   replayScene.add(neonCyanLight);
-  
+
   const neonPurpleLight = new THREE.PointLight(0xa855f7, 2, 10);
   neonPurpleLight.position.set(2, -1, 2);
   replayScene.add(neonPurpleLight);
-  
+
   // Grid floor
   const gridHelper = new THREE.GridHelper(10, 20, 0x00f0ff, 0x222244);
   gridHelper.position.y = -1;
   replayScene.add(gridHelper);
-  
+
   // Build simple 3D Skeleton
   skeletonGroup = new THREE.Group();
-  
-  const materialJoint = new THREE.MeshStandardMaterial({ 
-    color: 0x00f0ff, 
-    emissive: 0x00f0ff, 
-    emissiveIntensity: 0.5 
+
+  const materialJoint = new THREE.MeshStandardMaterial({
+    color: 0x00f0ff,
+    emissive: 0x00f0ff,
+    emissiveIntensity: 0.5,
   });
-  
-  const materialBone = new THREE.MeshStandardMaterial({ 
-    color: 0x00f0ff, 
-    transparent: true, 
-    opacity: 0.5 
+
+  const materialBone = new THREE.MeshStandardMaterial({
+    color: 0x00f0ff,
+    transparent: true,
+    opacity: 0.5,
   });
-  
+
   const materialError = new THREE.MeshStandardMaterial({
     color: 0xff3b5c,
     emissive: 0xff3b5c,
-    emissiveIntensity: 0.8
+    emissiveIntensity: 0.8,
   });
-  
+
   // Helper to create joints and bones
   const joints = {};
-  function addJoint(name, x, y, z, isError=false) {
+  function addJoint(name, x, y, z, isError = false) {
     const geo = new THREE.SphereGeometry(0.06, 16, 16);
     const mesh = new THREE.Mesh(geo, isError ? materialError : materialJoint);
     mesh.position.set(x, y, z);
     skeletonGroup.add(mesh);
     joints[name] = mesh;
   }
-  
+
   function addBone(j1, j2) {
     const distance = joints[j1].position.distanceTo(joints[j2].position);
     const geo = new THREE.CylinderGeometry(0.02, 0.02, distance, 8);
     const mesh = new THREE.Mesh(geo, materialBone);
-    
+
     // Position halfway
     mesh.position.copy(joints[j1].position).lerp(joints[j2].position, 0.5);
-    
+
     // Rotation logic
     mesh.quaternion.setFromUnitVectors(
       new THREE.Vector3(0, 1, 0),
-      joints[j2].position.clone().sub(joints[j1].position).normalize()
+      joints[j2].position.clone().sub(joints[j1].position).normalize(),
     );
-    
+
     skeletonGroup.add(mesh);
   }
-  
+
   // Positions approximate
-  addJoint('head', 0, 1.7, 0);
-  addJoint('neck', 0, 1.5, 0);
-  addJoint('shoulderL', -0.3, 1.4, 0);
-  addJoint('shoulderR', 0.3, 1.4, 0);
-  addJoint('elbowL', -0.4, 1.1, 0.1);
-  addJoint('elbowR', 0.4, 1.1, 0.1);
-  addJoint('handL', -0.4, 0.8, 0.2);
-  addJoint('handR', 0.4, 0.8, 0.2);
-  
-  addJoint('hipL', -0.2, 0.9, 0);
-  addJoint('hipR', 0.2, 0.9, 0);
-  addJoint('kneeL', -0.2, 0.4, 0.1, true); // Highlight knee as red
-  addJoint('kneeR', 0.2, 0.4, 0.1);
-  addJoint('footL', -0.2, 0, 0);
-  addJoint('footR', 0.2, 0, 0);
-  
-  addBone('head', 'neck');
-  addBone('neck', 'shoulderL');
-  addBone('neck', 'shoulderR');
-  addBone('shoulderL', 'elbowL');
-  addBone('elbowL', 'handL');
-  addBone('shoulderR', 'elbowR');
-  addBone('elbowR', 'handR');
-  addBone('neck', 'hipL');     // simple spine
-  addBone('neck', 'hipR');     // simple spine
-  addBone('hipL', 'hipR');
-  addBone('hipL', 'kneeL');
-  addBone('kneeL', 'footL');
-  addBone('hipR', 'kneeR');
-  addBone('kneeR', 'footR');
-  
+  addJoint("head", 0, 1.7, 0);
+  addJoint("neck", 0, 1.5, 0);
+  addJoint("shoulderL", -0.3, 1.4, 0);
+  addJoint("shoulderR", 0.3, 1.4, 0);
+  addJoint("elbowL", -0.4, 1.1, 0.1);
+  addJoint("elbowR", 0.4, 1.1, 0.1);
+  addJoint("handL", -0.4, 0.8, 0.2);
+  addJoint("handR", 0.4, 0.8, 0.2);
+
+  addJoint("hipL", -0.2, 0.9, 0);
+  addJoint("hipR", 0.2, 0.9, 0);
+  addJoint("kneeL", -0.2, 0.4, 0.1, true); // Highlight knee as red
+  addJoint("kneeR", 0.2, 0.4, 0.1);
+  addJoint("footL", -0.2, 0, 0);
+  addJoint("footR", 0.2, 0, 0);
+
+  addBone("head", "neck");
+  addBone("neck", "shoulderL");
+  addBone("neck", "shoulderR");
+  addBone("shoulderL", "elbowL");
+  addBone("elbowL", "handL");
+  addBone("shoulderR", "elbowR");
+  addBone("elbowR", "handR");
+  addBone("neck", "hipL"); // simple spine
+  addBone("neck", "hipR"); // simple spine
+  addBone("hipL", "hipR");
+  addBone("hipL", "kneeL");
+  addBone("kneeL", "footL");
+  addBone("hipR", "kneeR");
+  addBone("kneeR", "footR");
+
   skeletonGroup.position.y = -0.5;
   replayScene.add(skeletonGroup);
-  
+
   // Animation loop
   let isPlaying = true;
   let time = 0;
-  
-  const playBtn = document.getElementById('btn-play');
-  playBtn.addEventListener('click', () => {
+
+  const playBtn = document.getElementById("btn-play");
+  playBtn.addEventListener("click", () => {
     isPlaying = !isPlaying;
-    playBtn.innerHTML = isPlaying ? 
-      `<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>` : 
-      `<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l14 9-14 9z"/></svg>`;
+    playBtn.innerHTML = isPlaying
+      ? `<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`
+      : `<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l14 9-14 9z"/></svg>`;
   });
-  
-  const slider = document.getElementById('replay-slider');
-  
+
+  const slider = document.getElementById("replay-slider");
+
   function animate() {
     animationFrameId = requestAnimationFrame(animate);
-    
+
     if (isPlaying) {
       time += 0.01;
       skeletonGroup.rotation.y = Math.sin(time) * 0.5; // slight rotation
-      
+
       // Simulate squat motion
-      const squatDepth = (Math.sin(time * 2) + 1) * 0.25; 
+      const squatDepth = (Math.sin(time * 2) + 1) * 0.25;
       skeletonGroup.position.y = -0.5 - squatDepth;
-      
-      joints['kneeL'].position.z = 0.1 + squatDepth;
-      joints['kneeR'].position.z = 0.1 + squatDepth;
-      
+
+      joints["kneeL"].position.z = 0.1 + squatDepth;
+      joints["kneeR"].position.z = 0.1 + squatDepth;
+
       // Update slider
       slider.value = (time * 10) % 100;
     }
-    
+
     replayRenderer.render(replayScene, replayCamera);
   }
-  
+
   animate();
-  
+
   // Handle resize
-  window.addEventListener('resize', () => {
-    if (state.currentScreen !== '#replay-screen') return;
+  window.addEventListener("resize", () => {
+    if (state.currentScreen !== "#replay-screen") return;
     replayCamera.aspect = container.clientWidth / container.clientHeight;
     replayCamera.updateProjectionMatrix();
     replayRenderer.setSize(container.clientWidth, container.clientHeight);
@@ -608,6 +618,6 @@ function initReplay() {
 }
 
 // Boot
-window.location.hash = '#welcome-screen';
+window.location.hash = "#welcome-screen";
 initParticles();
-navigate('#welcome-screen');
+navigate("#welcome-screen");

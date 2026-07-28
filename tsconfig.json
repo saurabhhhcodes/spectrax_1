@@ -9,7 +9,6 @@
 
     "noImplicitAny": false,
 
-
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "allowImportingTsExtensions": true,

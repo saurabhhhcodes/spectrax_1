@@ -1,14 +1,18 @@
-import type { Pose as PoseType, Results, NormalizedLandmarkList } from '@mediapipe/pose';
-import { gpuAngleCalculator } from './gpuAngleUtils';
+import type {
+  Pose as PoseType,
+  Results,
+  NormalizedLandmarkList,
+} from "@mediapipe/pose";
+import { gpuAngleCalculator } from "./gpuAngleUtils";
 // MediaPipe ships as a UMD bundle loaded via CDN in index.html — not ESM-importable.
 const Pose = (window as any).Pose as typeof PoseType;
 
 // ─── Pose Buffer Configuration ────────────────────────────────────────────────
 
 export interface PoseBufferConfig {
-  landmarkCount: number;   // default: 33
-  components: number;      // default: 4 (x, y, z, visibility)
-  historySize: number;     // default: 30
+  landmarkCount: number; // default: 33
+  components: number; // default: 4 (x, y, z, visibility)
+  historySize: number; // default: 30
 }
 
 /** BlazePose landmark indices for readable call sites */
@@ -80,14 +84,20 @@ function writePoseToHistory(): void {
  * @returns A subarray view into the ring buffer (do NOT cache across frames)
  */
 export function getHistoryFrame(framesAgo: number): Float32Array {
-  const idx = ((historyHead - 1 - framesAgo) % HISTORY_SIZE + HISTORY_SIZE) % HISTORY_SIZE;
+  const idx =
+    (((historyHead - 1 - framesAgo) % HISTORY_SIZE) + HISTORY_SIZE) %
+    HISTORY_SIZE;
   const offset = idx * LM_COUNT * STRIDE;
   return poseHistory.subarray(offset, offset + LM_COUNT * STRIDE);
 }
 
 // ─── Scratch Vectors for Hot-Path Calculations ────────────────────────────────
 
-interface Vec3 { x: number; y: number; z: number }
+interface Vec3 {
+  x: number;
+  y: number;
+  z: number;
+}
 
 const _vecA: Vec3 = { x: 0, y: 0, z: 0 };
 const _vecB: Vec3 = { x: 0, y: 0, z: 0 };
@@ -198,9 +208,7 @@ export interface EmaFilterOptions {
   alpha?: number;
 }
 
-export type PoseSmoothingFilterConfig =
-  | KalmanFilterOptions
-  | EmaFilterOptions;
+export type PoseSmoothingFilterConfig = KalmanFilterOptions | EmaFilterOptions;
 
 interface LandmarkFilter {
   readonly type: PoseSmoothingFilterType;
@@ -248,7 +256,6 @@ const getCoordinateKey = (
 ) => `${stream}:${landmarkIndex}:${coordinate}`;
 
 // ─── Optimized EMA Filter (In-Place Mutation) ─────────────────────────────────
-
 
 /**
  * EMA filter using Float32Array storage for zero-alloc per-frame smoothing.
@@ -415,7 +422,8 @@ class KalmanLandmarkFilter implements LandmarkFilter {
 
         const predictedCov = this.covariances[idx] + pNoise;
         const gain = predictedCov / (predictedCov + mNoise);
-        const estimate = this.estimates[idx] + gain * (measurement - this.estimates[idx]);
+        const estimate =
+          this.estimates[idx] + gain * (measurement - this.estimates[idx]);
         const covariance = (1 - gain) * predictedCov + pNoise * 0.001;
 
         this.estimates[idx] = estimate;
@@ -448,9 +456,7 @@ class KalmanLandmarkFilter implements LandmarkFilter {
   }
 }
 
-const createFilter = (
-  config: PoseSmoothingFilterConfig,
-): LandmarkFilter => {
+const createFilter = (config: PoseSmoothingFilterConfig): LandmarkFilter => {
   if (config.type === "ema") {
     return new EmaLandmarkFilter(config);
   }
@@ -458,7 +464,10 @@ const createFilter = (
 };
 
 const createSharedLandmarkFrame = (): SharedLandmarkFrame | null => {
-  if (typeof SharedArrayBuffer === "undefined" || !globalThis.crossOriginIsolated) {
+  if (
+    typeof SharedArrayBuffer === "undefined" ||
+    !globalThis.crossOriginIsolated
+  ) {
     return null;
   }
 
@@ -481,12 +490,14 @@ export class PoseService {
   private isLoaded: boolean = false;
   private inProgress: boolean = false;
   private errorCount: number = 0;
-  private sharedLandmarkFrame: SharedLandmarkFrame | null = createSharedLandmarkFrame();
+  private sharedLandmarkFrame: SharedLandmarkFrame | null =
+    createSharedLandmarkFrame();
   private pool: ArrayBuffer[] = [
     new ArrayBuffer(BUF_BYTES),
     new ArrayBuffer(BUF_BYTES),
   ];
-  private smoothingFilters: LandmarkFilter[] = DEFAULT_FILTERS.map(createFilter);
+  private smoothingFilters: LandmarkFilter[] =
+    DEFAULT_FILTERS.map(createFilter);
 
   constructor() {
     this.init();
@@ -648,12 +659,19 @@ export class PoseService {
   }
 
   setSmoothingFilterEnabled(type: PoseSmoothingFilterType, enabled: boolean) {
-    const existingFilter = this.smoothingFilters.find((filter) => filter.type === type);
+    const existingFilter = this.smoothingFilters.find(
+      (filter) => filter.type === type,
+    );
 
     if (!existingFilter) {
-      const defaultFilter = DEFAULT_FILTERS.find((filter) => filter.type === type) ?? { type };
+      const defaultFilter = DEFAULT_FILTERS.find(
+        (filter) => filter.type === type,
+      ) ?? { type };
       this.smoothingFilters.push(
-        createFilter({ ...defaultFilter, enabled } as PoseSmoothingFilterConfig),
+        createFilter({
+          ...defaultFilter,
+          enabled,
+        } as PoseSmoothingFilterConfig),
       );
       return;
     }
@@ -684,9 +702,7 @@ export class PoseService {
     });
   }
 
-  async send(
-    image: HTMLVideoElement | HTMLCanvasElement | HTMLImageElement,
-  ) {
+  async send(image: HTMLVideoElement | HTMLCanvasElement | HTMLImageElement) {
     if (!this.pose || !this.isLoaded || this.inProgress) return;
 
     this.inProgress = true;

@@ -1,4 +1,4 @@
- /**
+/**
  * Workout Sync Service
  * Handles syncing workout data between local IndexedDB and Firestore
  * Supports offline persistence and automatic synchronization
@@ -152,7 +152,6 @@ export async function getLocalWorkouts(
 export async function getUnsyncedWorkouts(
   userId: string,
 ): Promise<WorkoutRecord[]> {
-
   const db = await openDB();
   return new Promise((resolve, reject) => {
     const tx = db.transaction(WORKOUTS_STORE, "readonly");
@@ -173,7 +172,10 @@ export async function getUnsyncedWorkouts(
 /**
  * Update sync status and key of a workout in IndexedDB
  */
-async function markWorkoutAsSynced(localId: number, firestoreId: string): Promise<void> {
+async function markWorkoutAsSynced(
+  localId: number,
+  firestoreId: string,
+): Promise<void> {
   const db = await openDB();
   return new Promise((resolve, reject) => {
     const tx = db.transaction(WORKOUTS_STORE, "readwrite");
@@ -210,11 +212,13 @@ async function updateLocalWorkoutsFromFirestore(
   const store = tx.objectStore(WORKOUTS_STORE);
 
   // Fetch all existing local records to match by firestore ID
-  const localWorkouts = await new Promise<WorkoutRecord[]>((resolve, reject) => {
-    const req = store.getAll();
-    req.onsuccess = () => resolve(req.result as WorkoutRecord[]);
-    req.onerror = () => reject(req.error);
-  });
+  const localWorkouts = await new Promise<WorkoutRecord[]>(
+    (resolve, reject) => {
+      const req = store.getAll();
+      req.onsuccess = () => resolve(req.result as WorkoutRecord[]);
+      req.onerror = () => reject(req.error);
+    },
+  );
 
   return new Promise((resolve, reject) => {
     firestoreWorkouts.forEach((workout) => {
@@ -353,7 +357,10 @@ export async function syncWorkoutsToFirestore(userId: string): Promise<number> {
           syncedCount++;
         }
       } catch (error) {
-        console.error(`Failed to sync workout with localId ${workout.localId}:`, error);
+        console.error(
+          `Failed to sync workout with localId ${workout.localId}:`,
+          error,
+        );
         // Continue with next workout instead of throwing
       }
     }
@@ -542,10 +549,10 @@ export async function bulkUploadWorkouts(
  */
 export async function deleteWorkout(
   userId: string,
-  id: string | number
+  id: string | number,
 ): Promise<void> {
   const db = await openDB();
-  
+
   // 1. Delete locally from IndexedDB
   await new Promise<void>((resolve, reject) => {
     const tx = db.transaction(WORKOUTS_STORE, "readwrite");

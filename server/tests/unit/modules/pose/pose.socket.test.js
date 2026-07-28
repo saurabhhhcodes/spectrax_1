@@ -1,11 +1,13 @@
-const { registerPoseSocketHandlers } = require('../../../../src/modules/pose/pose.socket');
+const {
+  registerPoseSocketHandlers,
+} = require("../../../../src/modules/pose/pose.socket");
 
 function createSocket() {
   const listeners = new Map();
   const emitted = [];
 
   return {
-    id: 'socket-1',
+    id: "socket-1",
     on(event, handler) {
       listeners.set(event, handler);
     },
@@ -19,29 +21,29 @@ function createSocket() {
   };
 }
 
-describe('pose.socket', () => {
-  it('ignores malformed frame payloads and emits acquisition feedback', () => {
+describe("pose.socket", () => {
+  it("ignores malformed frame payloads and emits acquisition feedback", () => {
     const socket = createSocket();
     const sessionService = {
       appendFrame: vi.fn(),
     };
 
     registerPoseSocketHandlers({ socket, sessionService });
-    socket.trigger('frame', {
+    socket.trigger("frame", {
       landmarks: [],
       timestamp: Number.NaN,
-      exercise: 'burpee',
+      exercise: "burpee",
     });
 
     expect(sessionService.appendFrame).not.toHaveBeenCalled();
     expect(socket.emitted).toEqual([
       {
-        event: 'feedback',
+        event: "feedback",
         payload: {
           angles: {},
           corrections: [],
-          status: 'yellow',
-          feedback: 'Acquiring pose...',
+          status: "yellow",
+          feedback: "Acquiring pose...",
           timestamp: null,
         },
       },

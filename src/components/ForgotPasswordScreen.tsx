@@ -28,11 +28,9 @@ export function ForgotPasswordScreen({ onBack }: ForgotPasswordScreenProps) {
     try {
       localStorage.setItem(key, value);
     } catch (e) {
-
       return;
 
       // Ignored: Fallback if localStorage is disabled or not accessible
-
     }
   };
 
@@ -40,11 +38,9 @@ export function ForgotPasswordScreen({ onBack }: ForgotPasswordScreenProps) {
     try {
       localStorage.removeItem(key);
     } catch (e) {
-
       return;
 
       // Ignored: Fallback if localStorage is disabled or not accessible
-
     }
   };
 

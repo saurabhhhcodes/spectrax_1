@@ -14,8 +14,8 @@ export interface WorkoutSession {
   exerciseType: string;
   totalReps: number;
   accuracyScore: number; // 0–100
-  duration: number;      // seconds
-  timestamp: number;     // Date.now()
+  duration: number; // seconds
+  timestamp: number; // Date.now()
 }
 
 // ── Hook ─────────────────────────────────────────────────────────────────────
@@ -43,7 +43,7 @@ export function useWorkoutHistory(): UseWorkoutHistoryReturn {
       const data = await getLocalWorkouts(user.uid);
       // Sort sessions descending by timestamp
       const sortedData: WorkoutSession[] = [...data].sort(
-        (a, b) => b.timestamp - a.timestamp
+        (a, b) => b.timestamp - a.timestamp,
       );
       setSessions(sortedData);
     } catch (err) {
@@ -66,7 +66,7 @@ export function useWorkoutHistory(): UseWorkoutHistoryReturn {
         console.error(err);
       }
     },
-    [user?.uid]
+    [user?.uid],
   );
 
   const clearHistory = useCallback(async () => {

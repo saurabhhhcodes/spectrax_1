@@ -9,9 +9,8 @@ export function generateRecommendations(
   mistakes: Record<string, number>,
   bestStreak: number,
   averageRepScore: number,
-  exerciseName?: string
+  exerciseName?: string,
 ): RecommendationResult[] {
-
   const recommendations: RecommendationResult[] = [];
 
   // Low accuracy
@@ -72,8 +71,7 @@ export function generateRecommendations(
 
     recommendations.push({
       title: "Correct Frequent Mistakes",
-      description:
-        `Most detected issue: ${worstMistake}. Focus on correcting this area during future sessions.`,
+      description: `Most detected issue: ${worstMistake}. Focus on correcting this area during future sessions.`,
       priority: "high",
     });
   }

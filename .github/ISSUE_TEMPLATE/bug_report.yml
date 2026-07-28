@@ -3,7 +3,6 @@ description: Report a bug or unexpected behavior in SpectraX
 title: "[BUG]: "
 labels: ["bug", "gssoc-26"]
 body:
-
   - type: markdown
     attributes:
       value: |

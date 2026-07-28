@@ -11,8 +11,12 @@
  *     fall below the 70-point threshold and be rejected by the accuracy system.
  */
 
-import { ExerciseConfig } from '../config/exercises';
-import { getFeedback, resetFeedbackEngine, FeedbackResult } from '../engine/feedbackEngine';
+import { ExerciseConfig } from "../config/exercises";
+import {
+  getFeedback,
+  resetFeedbackEngine,
+  FeedbackResult,
+} from "../engine/feedbackEngine";
 // Note: feedbackEngine.ts lives in src/engine/ — path is correct relative to src/services/
 import {
   classifySquatDepth,
@@ -22,7 +26,7 @@ import {
   SquatDepthResult,
   SquatDepthStats,
   DEFAULT_SQUAT_DEPTH_CONFIG,
-} from './Squat_depth_classifier';
+} from "./Squat_depth_classifier";
 import {
   classifyPushupDepth,
   getLivePushupDepthFeedback,
@@ -31,8 +35,8 @@ import {
   PushupDepthResult,
   PushupDepthStats,
   DEFAULT_PUSHUP_DEPTH_CONFIG,
-} from './Pushup_depth_classifier';
-import { BodyType } from './bodyTypeEngine';
+} from "./Pushup_depth_classifier";
+import { BodyType } from "./bodyTypeEngine";
 
 // ─────────────────────────────────────────────
 // EngineState
@@ -147,39 +151,36 @@ export class ExerciseEngine {
     const now = Date.now();
     const p = this.repParams(config.key);
 
-
     // Adaptive Difficulty Tuning
     let currentCooldown = this.BASE_REP_COOLDOWN;
     let currentHysteresis = this.BASE_HYSTERESIS;
-    
-    if (bodyType === 'ecto') {
+
+    if (bodyType === "ecto") {
       currentCooldown = 750; // Longer limbs take more time to complete full ROM
       currentHysteresis = 12; // Ectos need slightly larger movement bands
-    } else if (bodyType === 'meso') {
+    } else if (bodyType === "meso") {
       currentCooldown = 500; // Mesomorphs can achieve faster athletic cadence
-      currentHysteresis = 8;  // Stricter form requirements
-    } else if (bodyType === 'endo') {
+      currentHysteresis = 8; // Stricter form requirements
+    } else if (bodyType === "endo") {
       currentCooldown = 650;
       currentHysteresis = 10;
     }
 
-    let {
-      reps,
-      stage,
-      lastRepTime,
-      isCalibrated,
-      history,
-      stageStartTime,
-    } = currentState;
+    let { reps, stage, lastRepTime, isCalibrated, history, stageStartTime } =
+      currentState;
 
     const currentVisibility = visibility[config.primaryJoint];
 
     // ───────── ADAPTIVE VISIBILITY & RECOVERY ─────────
     const prevVisibilityBuffer = currentState.visibilityBuffer || [];
 
-    const newVisibilityBuffer = [...prevVisibilityBuffer, currentVisibility].slice(-p.smoothingWindow);
-    const avgVisibility = newVisibilityBuffer.reduce((a, b) => a + b, 0) / newVisibilityBuffer.length;
-
+    const newVisibilityBuffer = [
+      ...prevVisibilityBuffer,
+      currentVisibility,
+    ].slice(-p.smoothingWindow);
+    const avgVisibility =
+      newVisibilityBuffer.reduce((a, b) => a + b, 0) /
+      newVisibilityBuffer.length;
 
     let nextTrackingLostFrames = currentState.trackingLostFrames || 0;
     let nextLastValidAngles = currentState.lastValidAngles || angles;
@@ -203,15 +204,16 @@ export class ExerciseEngine {
     if (avgVisibility < 0.4 && nextTrackingLostFrames >= 5) {
       return {
         ...currentState,
-        feedback: 'SENSORS BLURRED — POSITION BODY',
-        status: 'yellow',
+        feedback: "SENSORS BLURRED — POSITION BODY",
+        status: "yellow",
         isInExercisePosture: false,
-        liveDepthFeedback: '',
+        liveDepthFeedback: "",
       };
     }
 
     const newHistory = [...history, rawAngle].slice(-p.smoothingWindow);
-    const smoothedAngle = newHistory.reduce((a, b) => a + b, 0) / newHistory.length;
+    const smoothedAngle =
+      newHistory.reduce((a, b) => a + b, 0) / newHistory.length;
 
     if (!isCalibrated) {
       const isUpPosture = smoothedAngle > config.upThreshold - 5;
@@ -239,10 +241,10 @@ export class ExerciseEngine {
         history: newHistory,
         stage,
         stageStartTime,
-        feedback: 'ESTABLISHING POSTURE...',
-        status: 'yellow',
+        feedback: "ESTABLISHING POSTURE...",
+        status: "yellow",
         isInExercisePosture: false,
-        liveDepthFeedback: '',
+        liveDepthFeedback: "",
       };
     }
 
@@ -270,8 +272,8 @@ export class ExerciseEngine {
     const durationInDown = now - stageStartTime;
 
     if (
-      smoothedAngle > (config.upThreshold + currentHysteresis / 2) &&
-      stage === 'down'
+      smoothedAngle > config.upThreshold + currentHysteresis / 2 &&
+      stage === "down"
     ) {
       const durationInDown = now - stageStartTime;
 
@@ -289,7 +291,7 @@ export class ExerciseEngine {
     const isInExercisePosture = this.isValidExercisePosture(
       history,
       config,
-      nextStage
+      nextStage,
     );
 
     // Accumulate hold time for static exercises (1/FPS approximately, or based on time diff)
@@ -297,7 +299,11 @@ export class ExerciseEngine {
     // However, the cleanest way is to use a timestamp delta if we had previousTimestamp.
     // We can just add 1/15th of a second roughly, or just pass the timestamp from `now`.
     let nextHoldTime = currentState.holdTime || 0;
-    if (config.isStatic && isInExercisePosture && (currentState.status === 'green' || currentState.status === 'yellow')) {
+    if (
+      config.isStatic &&
+      isInExercisePosture &&
+      (currentState.status === "green" || currentState.status === "yellow")
+    ) {
       // Estimate based on FPS_LIMIT=20 (from WorkoutScreen.tsx)
       nextHoldTime += 1 / 20;
     } else if (config.isStatic && !isInExercisePosture) {
@@ -324,8 +330,8 @@ export class ExerciseEngine {
     } else {
       feedbackResult = {
         score: 100,
-        color: 'green',
-        message: 'READY 🟢',
+        color: "green",
+        message: "READY 🟢",
         issues: [],
         deviation: 0,
       };
@@ -346,26 +352,26 @@ export class ExerciseEngine {
     // We use downAngleReached (the running minimum this rep) so the cue
     // reflects the deepest point reached so far, not the current angle.
     // ───────────────────────────────────────────────────────────────────────
-    let liveDepthFeedback = '';
-    let livePushupDepthFeedback = '';
+    let liveDepthFeedback = "";
+    let livePushupDepthFeedback = "";
 
-    if (nextStage === 'down' && isInExercisePosture) {
+    if (nextStage === "down" && isInExercisePosture) {
       if (/squat/i.test(config.key)) {
         const depthCue = getLiveDepthFeedback(
           downAngleReached,
-          DEFAULT_SQUAT_DEPTH_CONFIG
+          DEFAULT_SQUAT_DEPTH_CONFIG,
         );
 
         // Surface depth cue only when form feedback is green (no overriding issue)
-        if (feedbackResult.color === 'green' && depthCue) {
+        if (feedbackResult.color === "green" && depthCue) {
           liveDepthFeedback = depthCue;
         }
       } else if (/pushup/i.test(config.key)) {
         const depthCue = getLivePushupDepthFeedback(
           downZReached,
-          DEFAULT_PUSHUP_DEPTH_CONFIG
+          DEFAULT_PUSHUP_DEPTH_CONFIG,
         );
-        if (feedbackResult.color === 'green' && depthCue) {
+        if (feedbackResult.color === "green" && depthCue) {
           livePushupDepthFeedback = depthCue;
         }
       }
@@ -385,7 +391,8 @@ export class ExerciseEngine {
     let nextLastDepthResult = currentState.lastDepthResult ?? null;
     let nextDepthStats = currentState.depthStats ?? initialSquatDepthStats();
     let nextLastPushupDepthResult = currentState.lastPushupDepthResult ?? null;
-    let nextPushupDepthStats = currentState.pushupDepthStats ?? initialPushupDepthStats();
+    let nextPushupDepthStats =
+      currentState.pushupDepthStats ?? initialPushupDepthStats();
 
     if (repJustCounted) {
       // ── Classify depth for the completed rep ─────────────────────────────
@@ -402,7 +409,7 @@ export class ExerciseEngine {
       if (isSquat) {
         const depthResult = classifySquatDepth(
           downAngleReached,
-          DEFAULT_SQUAT_DEPTH_CONFIG
+          DEFAULT_SQUAT_DEPTH_CONFIG,
         );
 
         nextLastDepthResult = depthResult;
@@ -414,22 +421,25 @@ export class ExerciseEngine {
         // Clamp to [0, 100] so a bonus never exceeds perfect.
         nextMinScoreInRep = Math.max(
           0,
-          Math.min(100, nextMinScoreInRep + depthScoreModifier)
+          Math.min(100, nextMinScoreInRep + depthScoreModifier),
         );
       } else if (isPushup) {
         const depthResult = classifyPushupDepth(
           downZReached,
-          DEFAULT_PUSHUP_DEPTH_CONFIG
+          DEFAULT_PUSHUP_DEPTH_CONFIG,
         );
 
         nextLastPushupDepthResult = depthResult;
-        nextPushupDepthStats = accumulatePushupDepthStats(nextPushupDepthStats, depthResult);
+        nextPushupDepthStats = accumulatePushupDepthStats(
+          nextPushupDepthStats,
+          depthResult,
+        );
         depthScoreModifier = depthResult.scoreModifier;
         if (!depthResult.isFullDepth) nextMinScoreInRep = 0;
 
         nextMinScoreInRep = Math.max(
           0,
-          Math.min(100, nextMinScoreInRep + depthScoreModifier)
+          Math.min(100, nextMinScoreInRep + depthScoreModifier),
         );
       }
 
@@ -462,13 +472,13 @@ export class ExerciseEngine {
     let displayStatus: "green" | "yellow" | "red";
 
     if (!isInExercisePosture) {
-      displayFeedback = 'Get into position...';
-      displayStatus = 'yellow';
-    } else if (nextStage === 'down' && liveDepthFeedback) {
+      displayFeedback = "Get into position...";
+      displayStatus = "yellow";
+    } else if (nextStage === "down" && liveDepthFeedback) {
       // Depth cue wins when form is clean and athlete is descending
       displayFeedback = liveDepthFeedback;
       displayStatus = feedbackResult.color;
-    } else if (nextStage === 'down' && livePushupDepthFeedback) {
+    } else if (nextStage === "down" && livePushupDepthFeedback) {
       displayFeedback = livePushupDepthFeedback;
       displayStatus = feedbackResult.color;
     } else {
@@ -480,28 +490,33 @@ export class ExerciseEngine {
     if (repJustCounted && nextLastDepthResult && /squat/i.test(config.key)) {
       const classMsg = nextLastDepthResult.feedback;
       displayFeedback = classMsg;
-      displayStatus =
-        nextLastDepthResult.isFullDepth ? 'green' : 'red';
-    } else if (repJustCounted && nextLastPushupDepthResult && /pushup/i.test(config.key)) {
+      displayStatus = nextLastDepthResult.isFullDepth ? "green" : "red";
+    } else if (
+      repJustCounted &&
+      nextLastPushupDepthResult &&
+      /pushup/i.test(config.key)
+    ) {
       const classMsg = nextLastPushupDepthResult.feedback;
       displayFeedback = classMsg;
-      displayStatus =
-        nextLastPushupDepthResult.isFullDepth ? 'green' : 'red';
+      displayStatus = nextLastPushupDepthResult.isFullDepth ? "green" : "red";
     }
 
     const nextMistakes = { ...currentState.mistakes };
 
     if (
       isInExercisePosture &&
-      displayStatus !== 'green' &&
-      displayFeedback !== 'Good form ✅'
+      displayStatus !== "green" &&
+      displayFeedback !== "Good form ✅"
     ) {
-      nextMistakes[displayFeedback] =
-        (nextMistakes[displayFeedback] || 0) + 1;
+      nextMistakes[displayFeedback] = (nextMistakes[displayFeedback] || 0) + 1;
     }
 
-    const nextTotalScore = isInExercisePosture ? currentState.totalScore + frameScore : currentState.totalScore;
-    const nextTotalFrames = isInExercisePosture ? currentState.totalFrames + 1 : currentState.totalFrames;
+    const nextTotalScore = isInExercisePosture
+      ? currentState.totalScore + frameScore
+      : currentState.totalScore;
+    const nextTotalFrames = isInExercisePosture
+      ? currentState.totalFrames + 1
+      : currentState.totalFrames;
 
     // Final accuracy %
     const accuracy =

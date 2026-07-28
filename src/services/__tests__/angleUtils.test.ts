@@ -12,7 +12,7 @@ const lm = (x: number, y: number, z = 0, visibility = 1) => ({
 // Build a 33-element landmarks array with sensible defaults
 function mockLandmarks(overrides: Record<number, ReturnType<typeof lm>> = {}) {
   const base = Array.from({ length: 33 }, (_, i) =>
-    lm(i * 0.03, i * 0.03, 0, 1)
+    lm(i * 0.03, i * 0.03, 0, 1),
   );
   for (const [idx, val] of Object.entries(overrides)) {
     base[+idx] = val;

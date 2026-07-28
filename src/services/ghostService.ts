@@ -1,6 +1,10 @@
-import { SessionArchive, RLDCompressionDriver, FrameData } from './sessionRecorder';
+import {
+  SessionArchive,
+  RLDCompressionDriver,
+  FrameData,
+} from "./sessionRecorder";
 
-const GHOST_STORAGE_PREFIX = 'spectrax_ghost_';
+const GHOST_STORAGE_PREFIX = "spectrax_ghost_";
 
 export interface GhostStats {
   reps: number;
@@ -16,9 +20,9 @@ export class GhostService {
   public saveBestGhost(
     exerciseKey: string,
     stats: { reps: number; accuracy: number; totalReps: number },
-    archive: SessionArchive
+    archive: SessionArchive,
   ): boolean {
-    if (typeof window === 'undefined') return false;
+    if (typeof window === "undefined") return false;
 
     const statsKey = `${GHOST_STORAGE_PREFIX}${exerciseKey}_stats`;
     const archiveKey = `${GHOST_STORAGE_PREFIX}${exerciseKey}_archive`;
@@ -34,7 +38,8 @@ export class GhostService {
         // Better if more correct reps, or same correct reps but higher accuracy
         const isBetter =
           newCorrectReps > existingCorrectReps ||
-          (newCorrectReps === existingCorrectReps && stats.accuracy > existingStats.accuracy);
+          (newCorrectReps === existingCorrectReps &&
+            stats.accuracy > existingStats.accuracy);
 
         if (!isBetter) {
           return false; // Not a new best
@@ -45,7 +50,10 @@ export class GhostService {
       window.localStorage.setItem(archiveKey, JSON.stringify(archive));
       return true;
     } catch (error) {
-      console.warn("GhostService: Failed to save ghost session. Storage might be full.", error);
+      console.warn(
+        "GhostService: Failed to save ghost session. Storage might be full.",
+        error,
+      );
       return false;
     }
   }
@@ -53,8 +61,10 @@ export class GhostService {
   /**
    * Loads the ghost archive for the given exercise.
    */
-  public loadGhost(exerciseKey: string): { stats: GhostStats; frames: FrameData[] } | null {
-    if (typeof window === 'undefined') return null;
+  public loadGhost(
+    exerciseKey: string,
+  ): { stats: GhostStats; frames: FrameData[] } | null {
+    if (typeof window === "undefined") return null;
 
     const statsKey = `${GHOST_STORAGE_PREFIX}${exerciseKey}_stats`;
     const archiveKey = `${GHOST_STORAGE_PREFIX}${exerciseKey}_archive`;
@@ -79,17 +89,20 @@ export class GhostService {
   }
 
   /**
-   * Given an array of decompressed frames and an elapsed time (ms), 
+   * Given an array of decompressed frames and an elapsed time (ms),
    * returns the interpolated or closest frame.
    */
-  public getGhostFrameAtTime(frames: FrameData[], elapsedMs: number): FrameData | null {
+  public getGhostFrameAtTime(
+    frames: FrameData[],
+    elapsedMs: number,
+  ): FrameData | null {
     if (!frames || frames.length === 0) return null;
 
     // Time-based lookup. The first frame's timestamp is the base.
     const baseTimestamp = frames[0].timestamp;
     const targetTimestamp = baseTimestamp + elapsedMs;
 
-    // Binary search for the closest frame, or just a linear scan since it's fast 
+    // Binary search for the closest frame, or just a linear scan since it's fast
     // and usually we're looking near the end. Let's do a simple binary search.
     let low = 0;
     let high = frames.length - 1;
@@ -98,7 +111,7 @@ export class GhostService {
     if (targetTimestamp >= frames[high].timestamp) {
       return frames[high];
     }
-    
+
     // If target is before first frame (shouldn't happen), return first frame
     if (targetTimestamp <= baseTimestamp) {
       return frames[0];

@@ -1,7 +1,9 @@
 # SpectraX — Anomaly Detection Module (Issue #85)
+
 ## Integration Guide
 
 ### Files added
+
 ```
 src/
   types/anomaly.ts                — TypeScript interfaces
@@ -18,19 +20,27 @@ Find wherever you call `onResults` on your MediaPipe Pose instance (likely in a 
 
 ```tsx
 // e.g. WorkoutView.tsx (wherever you have your pose callback)
-import { useAnomalyDetection } from '../hooks/useAnomalyDetection';
+import { useAnomalyDetection } from "../hooks/useAnomalyDetection";
 
 function WorkoutView() {
-  const { recordFrame, runDetection, summary, searchSimilar, reset, frameCount } =
-    useAnomalyDetection({
-      algorithm: 'zscore',   // swap to 'mad' or 'isoforest' as needed
-      threshold: 2.0,
-      bufferSize: 300,       // ~10 seconds at 30fps
-      smoothing: true,
-    });
+  const {
+    recordFrame,
+    runDetection,
+    summary,
+    searchSimilar,
+    reset,
+    frameCount,
+  } = useAnomalyDetection({
+    algorithm: "zscore", // swap to 'mad' or 'isoforest' as needed
+    threshold: 2.0,
+    bufferSize: 300, // ~10 seconds at 30fps
+    smoothing: true,
+  });
 
   // Call reset() when a new workout session starts
-  useEffect(() => { reset(); }, []);
+  useEffect(() => {
+    reset();
+  }, []);
 
   // Inside your MediaPipe pose callback
   function handlePoseResults(results) {
@@ -64,8 +74,8 @@ function WorkoutView() {
 
 ```tsx
 // e.g. WorkoutSummary.tsx
-import { AnomalyDetectionPanel } from '../components/AnomalyDetectionPanel';
-import type { AnomalyAlgorithm } from '../types/anomaly';
+import { AnomalyDetectionPanel } from "../components/AnomalyDetectionPanel";
+import type { AnomalyAlgorithm } from "../types/anomaly";
 
 function WorkoutSummary({ summary, searchSimilar, onAlgorithmChange }) {
   if (!summary) return null;
@@ -77,7 +87,9 @@ function WorkoutSummary({ summary, searchSimilar, onAlgorithmChange }) {
         summary={summary}
         onSimilarSearch={(frameId) => searchSimilar(frameId, 5)}
         onAlgorithmChange={onAlgorithmChange}
-        onThresholdChange={(t) => { /* re-run detection with new threshold */ }}
+        onThresholdChange={(t) => {
+          /* re-run detection with new threshold */
+        }}
       />
     </section>
   );
@@ -88,11 +100,11 @@ function WorkoutSummary({ summary, searchSimilar, onAlgorithmChange }) {
 
 ### 3. Choosing an algorithm
 
-| Algorithm | When to use | Speed |
-|---|---|---|
-| `zscore` | Default. Clean, stable sessions. | Fast |
-| `mad` | Noisy data or quick warm-up frames. More robust. | Fast |
-| `isoforest` | Long sessions, subtle patterns, best accuracy. | Moderate |
+| Algorithm   | When to use                                      | Speed    |
+| ----------- | ------------------------------------------------ | -------- |
+| `zscore`    | Default. Clean, stable sessions.                 | Fast     |
+| `mad`       | Noisy data or quick warm-up frames. More robust. | Fast     |
+| `isoforest` | Long sessions, subtle patterns, best accuracy.   | Moderate |
 
 For real-time highlighting (mid-workout), use `zscore` or `mad`. Run `isoforest` post-session.
 

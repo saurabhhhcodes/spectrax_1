@@ -61,9 +61,7 @@ describe("useNetworkStatus", () => {
     const { result } = renderHook(() => useNetworkStatus());
 
     act(() => {
-      listeners.offline.forEach((handler) =>
-        handler(new Event("offline")),
-      );
+      listeners.offline.forEach((handler) => handler(new Event("offline")));
     });
 
     expect(result.current.isOnline).toBe(false);
@@ -79,9 +77,7 @@ describe("useNetworkStatus", () => {
     const { result } = renderHook(() => useNetworkStatus());
 
     act(() => {
-      listeners.online.forEach((handler) =>
-        handler(new Event("online")),
-      );
+      listeners.online.forEach((handler) => handler(new Event("online")));
     });
 
     expect(result.current.isOnline).toBe(true);
@@ -98,9 +94,7 @@ describe("useNetworkStatus", () => {
     renderHook(() => useNetworkStatus(onReconnect));
 
     act(() => {
-      listeners.online.forEach((handler) =>
-        handler(new Event("online")),
-      );
+      listeners.online.forEach((handler) => handler(new Event("online")));
     });
 
     expect(onReconnect).toHaveBeenCalledTimes(1);
@@ -117,9 +111,7 @@ describe("useNetworkStatus", () => {
     renderHook(() => useNetworkStatus(onReconnect));
 
     act(() => {
-      listeners.offline.forEach((handler) =>
-        handler(new Event("offline")),
-      );
+      listeners.offline.forEach((handler) => handler(new Event("offline")));
     });
 
     expect(onReconnect).not.toHaveBeenCalled();

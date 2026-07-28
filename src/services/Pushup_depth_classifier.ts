@@ -10,7 +10,7 @@
 // Types
 // ─────────────────────────────────────────────
 
-export type PushupDepthClass = 'deep' | 'parallel' | 'half';
+export type PushupDepthClass = "deep" | "parallel" | "half";
 
 export interface PushupDepthConfig {
   /** Z-depth diff below this are classified as deep (default 10) */
@@ -62,24 +62,24 @@ export const DEFAULT_PUSHUP_DEPTH_CONFIG: PushupDepthConfig = {
  */
 export function classifyPushupDepth(
   zDepth: number,
-  config: PushupDepthConfig = DEFAULT_PUSHUP_DEPTH_CONFIG
+  config: PushupDepthConfig = DEFAULT_PUSHUP_DEPTH_CONFIG,
 ): PushupDepthResult {
   if (zDepth < config.deepMax) {
     return {
-      classification: 'deep',
+      classification: "deep",
       depth: zDepth,
-      feedback: 'DEEP PUSHUP ✅',
-      scoreModifier: 5,       // bonus: reward athletes who go well below parallel
+      feedback: "DEEP PUSHUP ✅",
+      scoreModifier: 5, // bonus: reward athletes who go well below parallel
       isFullDepth: true,
     };
   }
 
   if (zDepth <= config.parallelMax) {
     return {
-      classification: 'parallel',
+      classification: "parallel",
       depth: zDepth,
-      feedback: 'GOOD DEPTH ✅',
-      scoreModifier: 0,       // baseline: no penalty, no bonus
+      feedback: "GOOD DEPTH ✅",
+      scoreModifier: 0, // baseline: no penalty, no bonus
       isFullDepth: true,
     };
   }
@@ -87,10 +87,10 @@ export function classifyPushupDepth(
   // Half pushup — did not reach parallel
   const deficit = Math.round(zDepth - config.parallelMax);
   return {
-    classification: 'half',
+    classification: "half",
     depth: zDepth,
     feedback: `GO LOWER — CHEST TO FLOOR`,
-    scoreModifier: -20,      // penalty: reduces rep quality score
+    scoreModifier: -20, // penalty: reduces rep quality score
     isFullDepth: false,
   };
 }
@@ -109,27 +109,24 @@ export function classifyPushupDepth(
  */
 export function getLivePushupDepthFeedback(
   currentZDepth: number,
-  config: PushupDepthConfig = DEFAULT_PUSHUP_DEPTH_CONFIG
+  config: PushupDepthConfig = DEFAULT_PUSHUP_DEPTH_CONFIG,
 ): string {
   if (currentZDepth > config.parallelMax + 10) {
-    return 'LOWER — CHEST TO FLOOR';
+    return "LOWER — CHEST TO FLOOR";
   }
   if (
     currentZDepth > config.parallelMax &&
     currentZDepth <= config.parallelMax + 10
   ) {
-    return 'ALMOST — SINK A LITTLE LOWER';
+    return "ALMOST — SINK A LITTLE LOWER";
   }
-  if (
-    currentZDepth <= config.parallelMax &&
-    currentZDepth > config.deepMax
-  ) {
-    return 'GOOD DEPTH ✅';
+  if (currentZDepth <= config.parallelMax && currentZDepth > config.deepMax) {
+    return "GOOD DEPTH ✅";
   }
   if (currentZDepth <= config.deepMax) {
-    return 'DEEP PUSHUP ✅';
+    return "DEEP PUSHUP ✅";
   }
-  return '';
+  return "";
 }
 
 // ─────────────────────────────────────────────
@@ -142,14 +139,14 @@ export function getLivePushupDepthFeedback(
  */
 export function accumulatePushupDepthStats(
   current: PushupDepthStats,
-  result: PushupDepthResult
+  result: PushupDepthResult,
 ): PushupDepthStats {
   const next = { ...current };
 
   next.totalClassified += 1;
 
-  if (result.classification === 'deep') next.deepCount += 1;
-  else if (result.classification === 'parallel') next.parallelCount += 1;
+  if (result.classification === "deep") next.deepCount += 1;
+  else if (result.classification === "parallel") next.parallelCount += 1;
   else next.halfCount += 1;
 
   const fullDepthReps = next.deepCount + next.parallelCount;

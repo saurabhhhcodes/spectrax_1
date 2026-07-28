@@ -14,7 +14,14 @@ export function LoginScreen({
   onSignUpClick,
   onForgotPasswordClick,
 }: LoginScreenProps) {
-  const { signIn, signInWithGoogle, signInAsGuest, error, clearError, loading } = useAuth();
+  const {
+    signIn,
+    signInWithGoogle,
+    signInAsGuest,
+    error,
+    clearError,
+    loading,
+  } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
@@ -34,11 +41,9 @@ export function LoginScreen({
     try {
       localStorage.setItem(key, value);
     } catch (e) {
-
       return;
 
       // Ignored: Fallback if localStorage is disabled or not accessible
-
     }
   };
 
@@ -46,11 +51,9 @@ export function LoginScreen({
     try {
       localStorage.removeItem(key);
     } catch (e) {
-
       return;
 
       // Ignored: Fallback if localStorage is disabled or not accessible
-
     }
   };
 
@@ -150,13 +153,11 @@ export function LoginScreen({
             "Too many failed attempts. Account locked for 60 seconds.",
           );
         } else {
-
           setLocalError(
             err.message || "Invalid credentials. Please try again.",
           );
 
           setLocalError("Invalid email or password");
-
         }
       } else {
         // Validation/network/other errors shouldn't increment failure attempts
@@ -317,7 +318,7 @@ export function LoginScreen({
             fontWeight: "500",
             cursor: "pointer",
             fontFamily: "inherit",
-            transition: "all 0.2s ease"
+            transition: "all 0.2s ease",
           }}
         >
           Bypass Login (Guest Mode)

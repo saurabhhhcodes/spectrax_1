@@ -1,6 +1,22 @@
 // src/HistoryPage.tsx
-import React, { useEffect, useState, useMemo, useCallback, useRef } from "react";
-import { History, Trash2, ArrowLeft, TrendingUp, Filter, Loader2, WifiOff, CheckCircle2, AlertCircle } from "lucide-react";
+import React, {
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+  useRef,
+} from "react";
+import {
+  History,
+  Trash2,
+  ArrowLeft,
+  TrendingUp,
+  Filter,
+  Loader2,
+  WifiOff,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
 import { useWorkoutHistory, type WorkoutSession } from "./useWorkoutHistory";
 
 // ── Debounce Hook ─────────────────────────────────────────────────────────────
@@ -52,11 +68,16 @@ const HistoryPage: React.FC<HistoryPageProps> = ({ onBack }) => {
     removeSession,
     clearHistory,
   } = useWorkoutHistory();
-  const { syncStatus, isOnline: workoutIsOnline, manualSync } = useWorkoutSync();
+  const {
+    syncStatus,
+    isOnline: workoutIsOnline,
+    manualSync,
+  } = useWorkoutSync();
   const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   // Offline replay queue state
-  const [offlineSyncState, setOfflineSyncState] = useState<OfflineSyncState>("idle");
+  const [offlineSyncState, setOfflineSyncState] =
+    useState<OfflineSyncState>("idle");
   const [pendingCount, setPendingCount] = useState<number>(0);
   const [syncResultMessage, setSyncResultMessage] = useState<string>("");
   const syncTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -337,7 +358,8 @@ const HistoryPage: React.FC<HistoryPageProps> = ({ onBack }) => {
             fontSize: "0.82rem",
             fontFamily: "'Space Mono', monospace",
             borderBottom: "1px solid",
-            ...(offlineSyncState === "pending" || (!isOnline && pendingCount > 0)
+            ...(offlineSyncState === "pending" ||
+            (!isOnline && pendingCount > 0)
               ? {
                   background: "rgba(251, 191, 36, 0.08)",
                   borderColor: "rgba(251, 191, 36, 0.3)",
@@ -367,14 +389,18 @@ const HistoryPage: React.FC<HistoryPageProps> = ({ onBack }) => {
               <>
                 <WifiOff size={14} />
                 <span>
-                  You're offline — {pendingCount} session{pendingCount !== 1 ? "s" : ""} will sync when you reconnect
+                  You're offline — {pendingCount} session
+                  {pendingCount !== 1 ? "s" : ""} will sync when you reconnect
                 </span>
               </>
             )}
             {offlineSyncState === "syncing" && (
               <>
                 <Loader2 size={14} className="spin-icon" />
-                <span>Syncing {pendingCount} session{pendingCount !== 1 ? "s" : ""}...</span>
+                <span>
+                  Syncing {pendingCount} session{pendingCount !== 1 ? "s" : ""}
+                  ...
+                </span>
               </>
             )}
             {offlineSyncState === "synced" && (
@@ -415,14 +441,48 @@ const HistoryPage: React.FC<HistoryPageProps> = ({ onBack }) => {
       <main className="history-body">
         {/* ── Filter Panel ── */}
         {!loading && !error && sessions.length > 0 && (
-          <div className="filter-panel" style={{ marginBottom: "20px", display: "flex", gap: "16px", flexWrap: "wrap", alignItems: "center", background: "var(--glass-bg)", padding: "16px", borderRadius: "12px", border: "1px solid var(--glass-border)", backdropFilter: "blur(12px)" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--text-secondary)" }}>
+          <div
+            className="filter-panel"
+            style={{
+              marginBottom: "20px",
+              display: "flex",
+              gap: "16px",
+              flexWrap: "wrap",
+              alignItems: "center",
+              background: "var(--glass-bg)",
+              padding: "16px",
+              borderRadius: "12px",
+              border: "1px solid var(--glass-border)",
+              backdropFilter: "blur(12px)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                color: "var(--text-secondary)",
+              }}
+            >
               <Filter size={16} />
-              <span style={{ fontSize: "14px", fontWeight: 600, fontFamily: "'Space Mono', monospace" }}>Filters</span>
+              <span
+                style={{
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  fontFamily: "'Space Mono', monospace",
+                }}
+              >
+                Filters
+              </span>
             </div>
-            
+
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <label htmlFor="type-filter" style={{ fontSize: "12px", color: "var(--text-primary)" }}>Type:</label>
+              <label
+                htmlFor="type-filter"
+                style={{ fontSize: "12px", color: "var(--text-primary)" }}
+              >
+                Type:
+              </label>
               <select
                 id="type-filter"
                 value={filterType}
@@ -436,17 +496,24 @@ const HistoryPage: React.FC<HistoryPageProps> = ({ onBack }) => {
                   fontSize: "13px",
                   fontFamily: "'Space Mono', monospace",
                   outline: "none",
-                  cursor: "pointer"
+                  cursor: "pointer",
                 }}
               >
-                {availableTypes.map(type => (
-                  <option key={type} value={type}>{type}</option>
+                {availableTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
                 ))}
               </select>
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <label htmlFor="calorie-filter" style={{ fontSize: "12px", color: "var(--text-primary)" }}>Min Cals (est):</label>
+              <label
+                htmlFor="calorie-filter"
+                style={{ fontSize: "12px", color: "var(--text-primary)" }}
+              >
+                Min Cals (est):
+              </label>
               <input
                 id="calorie-filter"
                 type="number"
@@ -463,7 +530,7 @@ const HistoryPage: React.FC<HistoryPageProps> = ({ onBack }) => {
                   fontSize: "13px",
                   fontFamily: "'Space Mono', monospace",
                   outline: "none",
-                  width: "100px"
+                  width: "100px",
                 }}
               />
             </div>
@@ -501,11 +568,17 @@ const HistoryPage: React.FC<HistoryPageProps> = ({ onBack }) => {
         )}
 
         {/* Sessions empty after filter */}
-        {!loading && !error && sessions.length > 0 && filteredSessions.length === 0 && (
-          <div className="state-center empty-state" style={{ minHeight: "150px" }}>
-            <p>No sessions match your filters.</p>
-          </div>
-        )}
+        {!loading &&
+          !error &&
+          sessions.length > 0 &&
+          filteredSessions.length === 0 && (
+            <div
+              className="state-center empty-state"
+              style={{ minHeight: "150px" }}
+            >
+              <p>No sessions match your filters.</p>
+            </div>
+          )}
 
         {/* Session grid */}
         {!loading && !error && filteredSessions.length > 0 && (
